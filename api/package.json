@@ -1,0 +1,37 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --cache 'index.js'",
+    "lint:fix": "./node_modules/.bin/eslint --fix 'index.js'",
+    "start": "nodemon"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.2.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-watch": "^6.0.1"
+  },
+  "dependencies": {
+    "helmet": "4.6.0",
+    "bcrypt": "^5.0.0",
+    "compression": "^1.7.4",
+    "cookie": "^0.4.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.5",
+    "mongoose-deep-populate": "3.2.0",
+    "mongoose-lean-virtuals": "0.8.0"
+  }
+}

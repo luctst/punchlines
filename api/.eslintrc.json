@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "airbnb-base",
+        "prettier"
+    ],
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "plugins": [
+        "prettier"
+    ],
+    "ignorePatterns": [
+        "*.png",
+        "*.json",
+        "*.html"
+    ],
+    "rules": {
+        "prettier/prettier": 1
+    }
+}

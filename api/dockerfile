@@ -1,0 +1,15 @@
+FROM node:15.1.0-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV=local
+ENV PATH /app/node_modules/.bin:$PATH
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin 
+
+COPY . ./
+
+RUN apk add --no-cache python make g++
+RUN npm install
+
+USER node

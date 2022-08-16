@@ -1,0 +1,25 @@
+@import '_variables.scss';
+@import '_font.scss';
+@import '_mixins.scss';
+@import '_class.scss';
+
+body {
+  font-family: 'Roboto', serif;
+  background-color: $secondColor;
+  max-height: 100vh;
+  margin:0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  @include isH1();
+}
