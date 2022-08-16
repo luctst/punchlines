@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
+          # cache: 'npm'
       - run: cd client/
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build
