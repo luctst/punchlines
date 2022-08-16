@@ -20,7 +20,7 @@ jobs:
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build
 
-      - name: deploy
+      # - name: deploy
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
