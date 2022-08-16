@@ -8,9 +8,9 @@ on:
 jobs:
   build-front:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ./client
+    defaults:
+      run:
+        working-directory: ./client
     strategy:
       matrix:
         node-version: [16.x]
