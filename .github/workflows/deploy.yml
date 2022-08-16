@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: ./client/package-lock.json
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build
 
