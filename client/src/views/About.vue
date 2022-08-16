@@ -29,11 +29,19 @@ main {
     margin-top: 1rem;
 
     div {
-      font-size: 2rem;
       font-weight: lighter;
       max-width: 60%;
       margin-bottom: 1rem;
-      line-height: 2.7rem;
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+      }
+
+      @media (min-width: 768px) {
+        font-size: 2rem;
+        line-height: 2.7rem;
+      }
     }
   }
 }
