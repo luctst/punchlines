@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v2
+        working-directory: ./client
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit
+      - run: npm run build
+
+      - name: deploy
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "${{secrets.HEROKU_APP_NAME}}"
+          heroku_email: "${{secrets.HEROKU_EMAIL}}"
+          appdir: "client"
