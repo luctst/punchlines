@@ -15,8 +15,8 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-      # - name: Setup node
-      - uses: actions/setup-node@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
         working-directory: ./client
         with:
           node-version: ${{ matrix.node }}
