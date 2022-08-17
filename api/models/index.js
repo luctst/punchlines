@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const ExampleSchema = require('./Example');
+const ExampleSchema = require('@models/Example');
 
 String.prototype.replaceAt = function replacetAt(index, replacement) {
   return (

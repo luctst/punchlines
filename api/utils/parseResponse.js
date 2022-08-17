@@ -1,4 +1,4 @@
-const response = require('./responseClient');
+const response = require('@utils/responseClient');
 
 /**
  * function who parsed response controller and call response function who send data to client.

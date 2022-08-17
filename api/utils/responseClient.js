@@ -1,4 +1,4 @@
-const { returnHttpCode } = require('../config');
+const { returnHttpCode } = require('@/config');
 
 module.exports = (response, code, data = {}) => {
   const httpCode = returnHttpCode(data.content, response.locals.$t);

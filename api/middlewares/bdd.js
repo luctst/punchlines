@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const response = require('../utils/responseClient');
+const response = require('@utils/responseClient');
 
 module.exports = function connectBdd() {
   return async function innerConnectBdd(req, res, next) {

@@ -1,4 +1,4 @@
-const isObject = require('../utils/isObject');
+const isObject = require('@utils/isObject');
 
 module.exports = function queryFind(Model, query, ops) {
   if (!isObject(query)) throw new TypeError('find parameter error');

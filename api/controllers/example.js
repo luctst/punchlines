@@ -1,4 +1,4 @@
-const dbQuery = require('../db/index');
+const dbQuery = require('@db/index');
 
 exports.exampleController = async function (req, res) {
   const items = await dbQuery('example', 'find', []);

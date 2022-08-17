@@ -1,5 +1,5 @@
-const isObject = require('./isObject');
-const ownProperty = require('./ownProperty');
+const isObject = require('@utils/isObject');
+const ownProperty = require('@utils/ownProperty');
 
 module.exports = function checkSchemaKeys(schemaObj, objToCheck) {
   if (!schemaObj || !objToCheck)

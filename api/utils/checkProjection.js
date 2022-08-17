@@ -1,5 +1,5 @@
-const isObject = require('./isObject');
-const ownProperty = require('./ownProperty');
+const isObject = require('@utils/isObject');
+const ownProperty = require('@utils/ownProperty');
 
 module.exports = function checkProjection(schemaObj, projectionToCheck) {
   if (!schemaObj || !projectionToCheck)

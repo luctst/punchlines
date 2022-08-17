@@ -1,4 +1,4 @@
-const isObject = require('../utils/isObject');
+const isObject = require('@utils/isObject');
 
 module.exports = function queryFindByIdAndUpdate(Model, mid, dataToUpdate, ops) {
   if (typeof mid !== 'string')

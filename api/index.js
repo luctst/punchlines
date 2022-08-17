@@ -10,11 +10,11 @@ const helmet = require('helmet');
 const i18n = require('i18n');
 const path = require('path');
 
-const connectBdd = require('./middlewares/bdd');
-const baseApiUrl = require('./utils/baseApiUrl');
-const config = require('./config');
+const connectBdd = require('@/middlewares/bdd');
+const baseApiUrl = require('@/utils/baseApiUrl');
+const config = require('@/config');
 
-const examplesRoutes = require('./routes/example');
+const examplesRoutes = require('@/routes/example');
 
 switch (process.env.NODE_ENV) {
   case 'development':

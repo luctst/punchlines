@@ -1,7 +1,7 @@
-const baseApiUrl = require('../utils/baseApiUrl')();
 const parseRouteData = require('parse-route-data');
-const { routes } = require('../config');
-const isObject = require('../utils/isObject');
+const baseApiUrl = require('@utils/baseApiUrl')();
+const { routes } = require('@/config');
+const isObject = require('@utils/isObject');
 
 function formatRoutesForConfig(routesMethodAsObject) {
   const methodsAsKeys = Object.keys(routesMethodAsObject);

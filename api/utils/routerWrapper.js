@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const parseResponse = require('./parseResponse');
+const parseResponse = require('@utils/parseResponse');
 
 module.exports = function routerWrapper(fn) {
   if (!fn || typeof fn !== 'function')

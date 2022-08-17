@@ -1,5 +1,5 @@
-const isObject = require('./isObject');
-const checkProjection = require('./checkProjection');
+const isObject = require('@utils/isObject');
+const checkProjection = require('@utils/checkProjection');
 
 module.exports = function opsParamsIsGood(ops, mongooseSchema) {
   if (!ops) throw new TypeError('opsParamsIsGood fn must include at least one params');

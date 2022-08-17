@@ -1,5 +1,5 @@
-const isObject = require('../utils/isObject');
-const checkSchemaKeys = require('../utils/checkSchemaKeys');
+const isObject = require('@utils/isObject');
+const checkSchemaKeys = require('@utils/checkSchemaKeys');
 
 module.exports = function queryCreate(Model, query, ops) {
   if (!isObject(query)) throw new TypeError('queryCreate fn parameter must be an object');

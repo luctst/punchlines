@@ -7,7 +7,18 @@
     "lint": "./node_modules/.bin/eslint --cache 'index.js'",
     "lint:fix": "./node_modules/.bin/eslint --fix 'index.js'",
     "start": "nodemon",
-    "build": "NODE_ENV=production webpack"
+    "build": "NODE_ENV=production webpack",
+    "postinstall": "link-module-alias"
+  },
+  "_moduleAliases": {
+    "@": ".",
+    "@controllers": "./controllers",
+    "@db": "./db",
+    "@i18n": "./i18n",
+    "@middlewares": "./middlewares",
+    "@models": "./models",
+    "@routes": "./routes",
+    "@utils": "./utils"
   },
   "license": "MIT",
   "devDependencies": {
@@ -23,6 +34,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-watch": "^6.0.1",
+    "link-module-alias": "^1.2.0",
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1",
     "webpack": "^4.46.0",

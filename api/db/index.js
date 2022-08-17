@@ -1,16 +1,16 @@
-const modelsManager = require('../models/index');
-const isObject = require('../utils/isObject');
-const opsParamsIsGood = require('../utils/opsParamsIsGood');
+const modelsManager = require('@models/index');
+const isObject = require('@utils/isObject');
+const opsParamsIsGood = require('@utils/opsParamsIsGood');
 
-const aggregate = require('./aggregate');
-const create = require('./create');
-const countDocuments = require('./countDocuments');
-const deleteMany = require('./deleteMany');
-const findOne = require('./findOne');
-const findById = require('./findById');
-const deleteOneById = require('./deleteOneById');
-const findByIdAndUpdate = require('./findByIdAndUpdate');
-const find = require('./find');
+const aggregate = require('@db/aggregate');
+const create = require('@db/create');
+const countDocuments = require('@db/countDocuments');
+const deleteMany = require('@db/deleteMany');
+const findOne = require('@db/findOne');
+const findById = require('@db/findById');
+const deleteOneById = require('@db/deleteOneById');
+const findByIdAndUpdate = require('@db/findByIdAndUpdate');
+const find = require('@db/find');
 
 module.exports = function queryManager(modelToUse, fnToCall, fnToCallParams, ops) {
   if (!modelToUse || typeof modelToUse !== 'string')
