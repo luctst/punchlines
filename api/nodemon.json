@@ -2,7 +2,15 @@
     "restartable": "rs",
     "verbose": true,
     "watch": [
-        "./index.js"
+        "./index.js",
+        "./routes/**/*.js",
+        "./middlewares/**/*.js",
+        "./utils/**/*.js",
+        "./models/**/*.js",
+        "./db/**/*.js",
+        "./config.js",
+        "./controllers/**/*.js",
+        "./i18n/**/*.json"
     ],
     "ext": "js,json",
     "env": {

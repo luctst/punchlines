@@ -1,0 +1,16 @@
+{
+  "httpCode": {
+    "200": "Succés",
+    "201": "Ressource créee",
+    "303": "See other",
+    "400": "Mauvaise requête",
+    "401": "Non autorisé",
+    "403": "Interdit",
+    "405": "Méthode non acceptée",
+    "406": "Non acceptable",
+    "409": "Conflit",
+    "422": "Unprocessable entity",
+    "500": "Serveur erreur, réessayez ou contactez-nous"
+  },
+  "exemple": "Message personnalisé en Français"
+}

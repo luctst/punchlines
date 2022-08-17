@@ -11,5 +11,3 @@ COPY . ./
 
 RUN apk add --no-cache python make g++
 RUN npm install
-
-USER node
