@@ -1,14 +1,14 @@
 @mixin isH1() {
   color: $mainColor;
   font-family: 'Lora', serif;
-  line-height: 4rem;
-  line-height: 3rem;
 
   @media (max-width: 768px) {
     font-size: 2rem;
+    line-height: 3rem;
   }
 
   @media (min-width: 1200px) {
     font-size: 3rem;
+    line-height: 4rem;
   }
 }
