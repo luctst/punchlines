@@ -5,12 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    artists: [
-      {
-        label: 'Kanye West',
-        apiUrl: 'https://api.kanye.rest/',
-      },
-    ],
+    usersData: null,
     lang: [
       {
         label: 'English',
@@ -27,8 +22,11 @@ export default new Vuex.Store({
   actions: {
   },
   getters: {
-    artistList(state) {
-      return state.artists;
+    getJwt(state) {
+      return state.usersData ? state.usersData.jwt : false;
+    },
+    getUserName(state) {
+      return state.usersData ? state.usersData.username : false;
     },
   },
 });

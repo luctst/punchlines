@@ -4,6 +4,7 @@ const Artists = require('@models/Artists');
 const Lyrics = require('@models/Lyrics');
 const Punchlines = require('@models/Punchlines');
 const Users = require('@models/Users');
+const Sessions = require('@models/Session');
 
 String.prototype.replaceAt = function replacetAt(index, replacement) {
   return (
@@ -26,6 +27,10 @@ function generateNames(modelName, customName) {
 }
 
 module.exports = [
+  {
+    Model: model('sessions', Sessions),
+    names: generateNames('sessions', ['sess', 'session']),
+  },
   {
     Model: model('artists', Artists),
     names: generateNames('artists', ['artist', 'at']),

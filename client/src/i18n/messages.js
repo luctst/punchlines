@@ -1,9 +1,10 @@
 export default {
   fr: {
     errorApi: 'Oupss, il y a une erreur veuillez réessayer en rechargant la page',
-    footerContent: 'Cette punchline vient de {rapper}',
     placeholderLyrics: 'Vous désirez continuer les lyrics ? Cliquez içi.',
-    nav: 'À Propos | Accueil',
+    nav: 'À Propos | Accueil | Classement',
+    connexionHeader: 'Connexion',
+    refreshSentence: 'Cliquez pour afficher une nouvelle punchline',
     about: [
       'Bienvenue ! 👋',
       'Ce site a pour seul but de regrouper les meilleures punchlines de vos rappeurs favoris.',
@@ -12,9 +13,10 @@ export default {
   },
   en: {
     errorApi: 'Oups.. There is an error, please try reload the page',
-    footerContent: 'This punchline comes from {rapper}',
     placeholderLyrics: 'Wanna continue the lyrics ? Click here.',
-    nav: 'About | Home',
+    nav: 'About | Home | Ranking',
+    connexionHeader: 'Connection',
+    refreshSentence: 'Click to display new punchline',
     about: [
       'Welcome ! 👋',
       'This site has the sole purpose of bringing together the best punchlines of your favorite rappers.',

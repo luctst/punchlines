@@ -26,12 +26,19 @@
             </div>
           </template>
         </li>
+        <li class="header--nav--ul--li">
+          <router-link v-if="getUserName" :to="`/${getUserName}`">
+            {{ getUserName }}
+          </router-link>
+          <div @click="$modal.show('log')">{{ $t('connexionHeader') }}</div>
+        </li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Lang from '@/assets/svg/lang.svg';
 import ClickOutside from 'vue-click-outside';
 
@@ -44,6 +51,7 @@ export default {
     ClickOutside,
   },
   computed: {
+    ...mapGetters(['getUserName']),
     filledLang() {
       return this.$store.state.lang.find((i) => i.code === this.$i18n.locale).label;
     },
@@ -65,9 +73,9 @@ export default {
         {
           link: '/about',
         },
-        // {
-        //   link: 'ranking',
-        // },
+        {
+          link: '/ranking',
+        },
         {
           langDropdown: this.$store.state.lang,
           active: false,
@@ -137,6 +145,8 @@ export default {
       }
 
       &--li {
+        align-items: center;
+        display: flex;
         margin-right: 1rem;
         position: relative;
 
@@ -146,6 +156,10 @@ export default {
           font-weight: bold;
           font-size: .9rem;
           text-decoration: none;
+        }
+
+        svg {
+          margin-right: .2rem;
         }
       }
     }

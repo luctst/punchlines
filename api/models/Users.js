@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 const PasswordValidator = require('password-validator');
+const { hash } = require('bcrypt');
 
 const UsersSchema = new mongoose.Schema(
   {
@@ -31,6 +32,31 @@ const UsersSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} bad email adress`,
       },
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 8,
+      validate: {
+        validator(v) {
+          const schema = new PasswordValidator();
+          return schema
+            .is().min(8)
+            .has().uppercase(1)
+            .has().lowercase(1)
+            .has().digits(1)
+            .has().not().spaces()
+            .validate(v)
+        },
+        message: (props) => `${props.value} bad format`,
+      },
+      async set(password) {
+        return await hash(password, 10);
+      },
+    },
+    is_verified: {
+      type: Boolean,
+      default: false,
     },
     score: {
       type: Number,

@@ -3,50 +3,54 @@
     <loader v-if="showLoader"></loader>
     <header-vue></header-vue>
     <div class="home--sentence">
-      <h1>
-        {{ sentence }}
-        <refresh @click="filledSentence"></refresh>
-      </h1>
-      <input type="text" autocomplete="false" :placeholder="$t('placeholderLyrics')" />
+      <figure>
+        <h1>{{ displayQuote }}</h1>
+        <figcaption>{{ displayArtist }}</figcaption>
+        <div @click.prevent="filledSentence">{{ $t('refreshSentence') }}</div>
+      </figure>
     </div>
     <footer class="home--footer">
-      <div>{{ $t('footerContent', { rapper: selected.label }) }}</div>
-      <!-- <v-select :options="artistList" v-model="selected"></v-select> -->
+      <input
+      @keyup.enter="submitPunchline"
+      type="text"
+      autocomplete="false"
+      :placeholder="$t('placeholderLyrics')" />
     </footer>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import http from '@/utils/http';
 import Loader from '@/components/Lodaer.vue';
 import HeaderVue from '@/components/HeaderVue.vue';
-import Refresh from '@/assets/svg/refresh.svg';
 
 export default {
   name: 'Home',
   components: {
     Loader,
     HeaderVue,
-    Refresh,
   },
   data() {
     return {
       sentence: null,
-      selected: this.$store.state.artists[0],
       showLoader: false,
     };
-  },
-  computed: {
-    ...mapGetters(['artistList']),
   },
   async mounted() {
     await this.filledSentence();
   },
+  computed: {
+    displayQuote() {
+      return this.sentence ? this.sentence.quote : '';
+    },
+    displayArtist() {
+      return this.sentence ? this.sentence.artist : '';
+    },
+  },
   methods: {
     async fetchPunchline() {
-      const resFetch = await fetch(this.selected.apiUrl);
-      const res = await resFetch.json();
-      return res.quote;
+      const resFetch = await http.get('/lyrics');
+      return resFetch.data;
     },
     async filledSentence() {
       try {
@@ -56,6 +60,9 @@ export default {
       } catch (error) {
         this.$toasted.error(this.$i18n.t('errorApi'));
       }
+    },
+    submitPunchline() {
+      console.log('enter press');
     },
   },
 };
@@ -85,18 +92,52 @@ export default {
     justify-content: center;
     flex-direction: column;
 
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
+    figure {
+      margin: 0;
+      width: 100%;
 
-      svg {
-        animation: rotate 2s linear infinite alternate forwards;
+      h1 {
+        text-align: center;
+      }
 
+      figcaption {
+        color: $secondColorContent;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+
+      div {
         &:hover {
           cursor: pointer;
         }
+
+        font-size: .89rem;
+        font-family: 'Roboto';
+        font-weight: lighter;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
+
+      @media (min-width: 768px) {
+        max-width: 80%;
+      }
+
+      @media (min-width: 1200px) {
+        max-width: 80%;
       }
     }
+  }
+
+  &--footer {
+    height: 10vh;
+    align-items: center;
+    display: flex;
+    border-top: .5px solid $secondColorContent;
 
     input {
       border: none;
@@ -105,19 +146,8 @@ export default {
       color: $secondColorContent;
       width: 100%;
       text-align: center;
+      font-size: 1rem;
     }
-  }
-
-  &--footer {
-    div:first-of-type {
-      color: $secondColorContent;
-      margin: 0 auto;
-    }
-
-    height: 10vh;
-    align-items: center;
-    display: flex;
-    border-top: .5px solid $secondColorContent;
   }
 }
 </style>

@@ -15,6 +15,7 @@ const baseApiUrl = require('@/utils/baseApiUrl');
 const config = require('@/config');
 
 const examplesRoutes = require('@/routes/lyrics');
+const authRoutes = require('@routes/auth');
 
 switch (process.env.NODE_ENV) {
   case 'development':
@@ -55,6 +56,7 @@ express.get(baseApiUrl(), function (req, res) {
 });
 
 express.use(baseApiUrl('/lyrics'), examplesRoutes);
+express.use(baseApiUrl('/auth'), authRoutes);
 
 express.listen(9229, function () {
     console.log(`Api listening on port ${9229}`);

@@ -3,7 +3,6 @@
   const mongoose = require('mongoose');
   const queryDb = require('@db/index');
   const isObject = require('@utils/isObject');
-  const kanyewest = require('./kanyewest.json');
 
   async function populateArtistWithQuotes(data) {
     if (
