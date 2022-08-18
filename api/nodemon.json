@@ -10,7 +10,8 @@
         "./db/**/*.js",
         "./config.js",
         "./controllers/**/*.js",
-        "./i18n/**/*.json"
+        "./i18n/**/*.json",
+        "./migration/**/*.js"
     ],
     "ext": "js,json",
     "env": {

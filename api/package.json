@@ -55,6 +55,7 @@
     "mongoose": "^5.12.5",
     "mongoose-deep-populate": "3.2.0",
     "mongoose-lean-virtuals": "0.8.0",
-    "parse-route-data": "^3.5.11"
+    "parse-route-data": "^3.5.11",
+    "password-validator": "5.3.0"
   }
 }

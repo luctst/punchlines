@@ -14,7 +14,7 @@ const connectBdd = require('@/middlewares/bdd');
 const baseApiUrl = require('@/utils/baseApiUrl');
 const config = require('@/config');
 
-const examplesRoutes = require('@/routes/example');
+const examplesRoutes = require('@/routes/lyrics');
 
 switch (process.env.NODE_ENV) {
   case 'development':
@@ -54,7 +54,7 @@ express.get(baseApiUrl(), function (req, res) {
   return res.status(200).json({ message: `Welcome on your api :) you're using version ${ config.apiVersion }`});
 });
 
-express.use(baseApiUrl('/example'), examplesRoutes);
+express.use(baseApiUrl('/lyrics'), examplesRoutes);
 
 express.listen(9229, function () {
     console.log(`Api listening on port ${9229}`);

@@ -11,6 +11,8 @@ module.exports = function queryFindOne(Model, query, ops) {
     {
       lean: true,
       ...(ops && ops.session && { session: ops.session }),
+      ...(ops && ops.populate && { populate: ops.populate }),
+      ...(ops && ops.skip && { skip: ops.skip }),
     }
   );
 };

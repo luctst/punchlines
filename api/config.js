@@ -48,7 +48,7 @@ module.exports = {
   routes: {
     get: [
       {
-        path: '/example',
+        path: '/lyrics',
         data: null,
       },
     ],

@@ -1,13 +1,13 @@
 const Router = require('express').Router();
 
 const routerWrapper = require('@utils/routerWrapper');
-const exampleCtrl = require('@controllers/example');
+const lyricsCtrl = require('@controllers/lyrics');
 const checkRoutes = require('@middlewares/routeManager');
 
 const middlewares = [
   checkRoutes(),
 ];
 
-Router.get('/', middlewares, routerWrapper(exampleCtrl.exampleController));
+Router.get('/', middlewares, routerWrapper(lyricsCtrl.returnLyricRandom));
 
 module.exports = Router;

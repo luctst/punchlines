@@ -1,6 +1,9 @@
 const { model } = require('mongoose');
 
-const ExampleSchema = require('@models/Example');
+const Artists = require('@models/Artists');
+const Lyrics = require('@models/Lyrics');
+const Punchlines = require('@models/Punchlines');
+const Users = require('@models/Users');
 
 String.prototype.replaceAt = function replacetAt(index, replacement) {
   return (
@@ -24,7 +27,19 @@ function generateNames(modelName, customName) {
 
 module.exports = [
   {
-    Model: model('example', ExampleSchema),
-    names: generateNames('example', ['ex', 'examples']),
+    Model: model('artists', Artists),
+    names: generateNames('artists', ['artist', 'at']),
+  },
+  {
+    Model: model('punchlines', Punchlines),
+    names: generateNames('punchlines', ['punchline', 'punch']),
+  },
+  {
+    Model: model('users', Users),
+    names: generateNames('users', ['user', 'usr']),
+  },
+  {
+    Model: model('lyrics', Lyrics),
+    names: generateNames('lyric', ['ly', 'lyrics']),
   },
 ];
