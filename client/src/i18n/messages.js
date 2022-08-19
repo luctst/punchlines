@@ -10,6 +10,16 @@ export default {
       'Ce site a pour seul but de regrouper les meilleures punchlines de vos rappeurs favoris.',
       'Complétez les lyrics et entrainez-vous à devenir le meilleur.',
     ],
+    auth: {
+      title: 'Connexion | Inscription',
+      footerPrefix: 'Déja membre ? | Pas encore membre ?',
+      footerBtn: 'Connectez-vous | S\'inscrire',
+      errors: {
+        username: 'Le nom d\'utilisateur ne doit contenir aucun caractére spécial',
+        email: 'Mauvais format de mail',
+        password: 'Le mot de passe doit contenir au minimum 8 cractéres, 1 minuscule, 1 majuscule, 1 chiffre et 1 caractére spécial et 0 espaces',
+      },
+    },
   },
   en: {
     errorApi: 'Oups.. There is an error, please try reload the page',
@@ -22,5 +32,15 @@ export default {
       'This site has the sole purpose of bringing together the best punchlines of your favorite rappers.',
       'Complete the lyrics and train to become the best.',
     ],
+    auth: {
+      title: 'Connection | Inscription',
+      footerPrefix: 'Already member ? | Not a member ?',
+      footerBtn: 'Sign in | Sign up',
+      errors: {
+        username: 'Username must not contain any special characters',
+        email: 'Email bad format',
+        password: 'The password must contain at least 8 characters, 1 lowercase, 1 uppercase, 1 number and 1 special character and 0 spaces',
+      },
+    },
   },
 };
