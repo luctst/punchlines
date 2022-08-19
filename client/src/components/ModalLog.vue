@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import PasswordValidator from 'password-validator';
 
 export default {
@@ -96,6 +97,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['getUserName']),
     formTitle() {
       return this.wantLog ? this.$tc('auth.title', 1) : this.$tc('auth.title', 0);
     },
@@ -107,6 +109,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['filledUsersData']),
     renderInputClass(hasError) {
       if (!this.formSubmit) return false;
       return hasError ? 'is-invalid' : 'is-valid';
@@ -143,7 +146,7 @@ export default {
         .spaces()
         .validate(value);
     },
-    submitForm() {
+    async submitForm() {
       try {
         this.formSubmit = true;
         const notError = this.inputsData.every((input, index) => {
@@ -159,10 +162,30 @@ export default {
         });
 
         if (!notError) return false;
-        console.log('Can send');
+
+        const dataToSend = { ...this.dataToPost };
+
+        if (this.wantLog) {
+          delete dataToSend.username;
+        }
+
+        await this.filledUsersData({
+          route: this.wantLog ? '/login' : '/register',
+          userData: { ...dataToSend },
+        });
+        this.$toasted.success(this.$t('auth.success', { username: this.getUserName }));
+        this.$modal.hide('log');
       } catch (error) {
         this.formSubmit = false;
-        this.$toasted.error(error.message);
+        let errorMessage;
+
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        } else {
+          errorMessage = error.message;
+        }
+
+        this.$toasted.error(errorMessage);
       }
 
       return true;

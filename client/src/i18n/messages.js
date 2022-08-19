@@ -19,6 +19,7 @@ export default {
         email: 'Mauvais format de mail',
         password: 'Le mot de passe doit contenir au minimum 8 cractéres, 1 minuscule, 1 majuscule, 1 chiffre et 1 caractére spécial et 0 espaces',
       },
+      success: 'Bienvenue {username}',
     },
   },
   en: {
@@ -41,6 +42,7 @@ export default {
         email: 'Email bad format',
         password: 'The password must contain at least 8 characters, 1 lowercase, 1 uppercase, 1 number and 1 special character and 0 spaces',
       },
+      success: 'Welcome {username}',
     },
   },
 };

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import http from '@/utils/http';
 
 Vue.use(Vuex);
 
@@ -18,8 +19,15 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
+    filledUsersData(state, userData) {
+      state.usersData = { ...userData };
+    },
   },
   actions: {
+    async filledUsersData({ commit }, payload) {
+      const newUser = await http.post(`/auth${payload.route}`, payload.userData);
+      commit('filledUsersData', newUser.data.newUser);
+    },
   },
   getters: {
     getJwt(state) {
@@ -27,6 +35,9 @@ export default new Vuex.Store({
     },
     getUserName(state) {
       return state.usersData ? state.usersData.username : false;
+    },
+    getUserId(state) {
+      return state.usersData ? state.usersData._id : false;
     },
   },
 });

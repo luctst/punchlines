@@ -27,10 +27,10 @@
           </template>
         </li>
         <li class="header--nav--ul--li">
-          <router-link v-if="getUserName" :to="`/${getUserName}`">
+          <router-link v-if="getUserId" :to="`/${getUserId}`">
             {{ getUserName }}
           </router-link>
-          <div @click="$modal.show('log')">{{ $t('connexionHeader') }}</div>
+          <div v-else @click="$modal.show('log')">{{ $t('connexionHeader') }}</div>
         </li>
       </ul>
     </nav>
@@ -51,7 +51,7 @@ export default {
     ClickOutside,
   },
   computed: {
-    ...mapGetters(['getUserName']),
+    ...mapGetters(['getUserId', 'getUserName']),
     filledLang() {
       return this.$store.state.lang.find((i) => i.code === this.$i18n.locale).label;
     },
