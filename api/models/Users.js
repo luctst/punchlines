@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 const PasswordValidator = require('password-validator');
-const { hash } = require('bcrypt');
+const { hashSync } = require('bcrypt');
 
 const UsersSchema = new mongoose.Schema(
   {
@@ -50,8 +50,8 @@ const UsersSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} bad format`,
       },
-      async set(password) {
-        return await hash(password, 10);
+      set(password) {
+        return hashSync(password, 10);
       },
     },
     is_verified: {

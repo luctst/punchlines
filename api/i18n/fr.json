@@ -12,5 +12,7 @@
     "422": "Unprocessable entity",
     "500": "Serveur erreur, réessayez ou contactez-nous"
   },
-  "exemple": "Message personnalisé en Français"
+  "auth": {
+    "userAlreadyExist": "Ce nom d'utilisateur existe déja"
+  }
 }

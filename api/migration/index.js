@@ -3,6 +3,7 @@
   const mongoose = require('mongoose');
   const queryDb = require('@db/index');
   const isObject = require('@utils/isObject');
+  const kanyewest = require('./kanyewest.json');
 
   async function populateArtistWithQuotes(data) {
     if (
@@ -29,10 +30,11 @@
 
   try {
     if (mongoose.connection.readyState === 1) return true;
-    await mongoose.connect(process.env.DB_URL_DEV, {
+    await mongoose.connect(process.env.DB_URL_PROD, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await populateArtistWithQuotes(kanyewest);
   } catch (error) {
     process.stderr.write(error.message);
   }

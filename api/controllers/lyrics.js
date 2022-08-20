@@ -11,6 +11,13 @@ exports.returnLyricRandom = async function returnlyricrandom(req, res) {
       skip: Math.floor(Math.random() * lyricsLength),
     }
   );
+
+  if (!quote) {
+    return {
+      code: 204,
+    };
+  }
+
   return {
     code: 200,
     modifyResponse: {

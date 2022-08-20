@@ -1,5 +1,6 @@
 export default {
   fr: {
+    lyricsNotFound: 'Aucunes punchlines n\'as pu être trouvé. Réessayez ou contactez-nous.',
     errorApi: 'Oupss, il y a une erreur veuillez réessayer en rechargant la page',
     placeholderLyrics: 'Vous désirez continuer les lyrics ? Cliquez içi.',
     nav: 'À Propos | Accueil | Classement',
@@ -23,6 +24,7 @@ export default {
     },
   },
   en: {
+    lyricsNotFound: 'No lyrics could be found, please try agin or contact us.',
     errorApi: 'Oups.. There is an error, please try reload the page',
     placeholderLyrics: 'Wanna continue the lyrics ? Click here.',
     nav: 'About | Home | Ranking',

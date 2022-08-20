@@ -1,5 +1,6 @@
 module.exports = {
   apiVersion: 1,
+  cookieRefresh: 'XSRF-TOKEN',
   returnHttpCode(message, translateFn) {
     return {
       200: {
@@ -50,6 +51,26 @@ module.exports = {
       {
         path: '/lyrics',
         data: null,
+      },
+    ],
+    post: [
+      {
+        path: '/auth/register',
+        data: {
+          username: {
+            type: String,
+            required: true,
+          },
+          email: {
+            type: String,
+            required: true,
+            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+          },
+          password: {
+            type: String,
+            required: true,
+          },
+        },
       },
     ],
   },

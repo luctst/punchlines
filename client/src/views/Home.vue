@@ -41,7 +41,9 @@ export default {
   },
   computed: {
     displayQuote() {
-      return this.sentence ? this.sentence.quote : '';
+      if (this.sentence === null) return '';
+      if (!this.sentence.length) return this.$t('lyricsNotFound');
+      return this.sentence.quote;
     },
     displayArtist() {
       return this.sentence ? this.sentence.artist : '';
