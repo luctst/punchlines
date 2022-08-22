@@ -16,6 +16,7 @@ const config = require('@/config');
 
 const examplesRoutes = require('@/routes/lyrics');
 const authRoutes = require('@routes/auth');
+const userRoutes = require('@routes/user');
 
 switch (process.env.NODE_ENV) {
   case 'development':
@@ -44,7 +45,7 @@ express.use(cors({
   origin: process.env.CORS,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  allowedHeaders: "Content-Type",
+  allowedHeaders: "Content-Type, Authorization",
 }));
 express.use(helmet());
 express.use(cookieParser());
@@ -57,6 +58,7 @@ express.get(baseApiUrl(), function (req, res) {
 
 express.use(baseApiUrl('/lyrics'), examplesRoutes);
 express.use(baseApiUrl('/auth'), authRoutes);
+express.use(baseApiUrl('/user'), userRoutes);
 
 express.listen(9229, function () {
     console.log(`Api listening on port ${9229}`);

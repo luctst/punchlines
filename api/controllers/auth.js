@@ -1,16 +1,73 @@
-const { hash } = require('bcrypt');
+const { compare } = require('bcrypt');
 
 const { cookieRefresh } = require('@/config');
 const queryDb = require('@db/index');
 const generateJwt = require('@utils/generateJwt');
 
-exports.Login = async function login(req, res) {
-  
+function returnUserToClient(userData) {
+  const keysToReturn = [
+    '_id',
+    'username',
+    'jwt',
+  ];
+
+  return Object
+    .keys(userData)
+    .reduce(
+      (prev, next) => {
+        const oldPrev = { ...prev };
+        if (!keysToReturn.includes(next)) return oldPrev;
+        oldPrev[next] = userData[next];
+        return oldPrev;
+      },
+      {} 
+    );
 }
 
-exports.Register = async function register(req, res) {
+exports.Login = async function login(req, res, session) {
+  const error = {
+    code: 401,
+  };
+  const user = await queryDb(
+    'users',
+    'findOne',
+    [{ email: req.body.email }],
+    {
+      session,
+      projection: {
+        email: 1,
+        password: 1,
+        username: 1,
+      },
+    }
+  );
+
+  if (!user) return { ...error };
+  if (!await compare(req.body.password, user.password)) return { ...error };
+
+  const newUserSession = await queryDb('session', 'create', [{ token_user_id: user._id }], { session });
+  const jwt = generateJwt({ id: newUserSession._id }, newUserSession.token_refresh);
+
+  res.cookie(
+    cookieRefresh,
+    newUserSession.token_refresh,
+    {
+      httpOnly: true,
+      path: '/',
+      sameSite: true,
+      Secure: true,
+    }
+  );
+  return {
+    code: 200,
+    modifyResponse: {
+      userData: returnUserToClient({ ...user, jwt }),
+    },
+  };
+}
+
+exports.Register = async function register(req, res, session) {
   const user = await queryDb('users', 'findOne', [{ username: req.body.username }]);
-  const keysToDelete = ['password', 'updatedAt', '__v'];
 
   if (user) {
     return {
@@ -19,20 +76,9 @@ exports.Register = async function register(req, res) {
     };
   }
 
-  const newUser = await queryDb('users', 'create', [{ ...req.body }]);
-  const newUserSession = await queryDb('session', 'create', [{ token_user_id: newUser._id }]);
-  const jwt = generateJwt(newUser._id, newUserSession.token_refresh);
-  const userDataToReturn = Object.keys(newUser._doc).reduce(
-    (prev, next) => {
-      const oldPrev = { ...prev };
-      
-      if (keysToDelete.includes(next)) return oldPrev;
-      
-      oldPrev[next] = newUser[next];
-      return oldPrev;
-    },
-    {},
-    );
+  const newUser = await queryDb('users', 'create', [{ ...req.body }], { session });
+  const newUserSession = await queryDb('session', 'create', [{ token_user_id: newUser._id }], { session });
+  const jwt = generateJwt({ uid: newUser._id }, newUserSession.token_refresh);
   
   res.cookie(
     cookieRefresh,
@@ -47,10 +93,7 @@ exports.Register = async function register(req, res) {
   return {
     code: 200,
     modifyResponse: {
-      newUser: {
-        ...userDataToReturn,
-        jwt,
-      },
+      userData: returnUserToClient({ ...newUser._doc, jwt }),
     },
   };
 }

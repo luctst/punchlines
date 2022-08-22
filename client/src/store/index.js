@@ -26,7 +26,7 @@ export default new Vuex.Store({
   actions: {
     async filledUsersData({ commit }, payload) {
       const newUser = await http.post(`/auth${payload.route}`, payload.userData);
-      commit('filledUsersData', newUser.data.newUser);
+      commit('filledUsersData', newUser.data.userData);
     },
   },
   getters: {

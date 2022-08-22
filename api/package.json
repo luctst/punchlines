@@ -8,9 +8,11 @@
     "lint:fix": "./node_modules/.bin/eslint --fix 'index.js'",
     "start": "nodemon",
     "build": "NODE_ENV=production webpack",
-    "postinstall": "link-module-alias"
+    "postinstall": "link-module-alias",
+    "preinstall": "command -v link-module-alias && link-module-alias clean || true"
   },
   "_moduleAliases": {
+    "~dotenv": "./node_modules/dotenv/lib/main.js",
     "@": ".",
     "@controllers": "./controllers",
     "@db": "./db",

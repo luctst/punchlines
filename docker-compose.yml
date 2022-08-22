@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   api:
+    container_name: api
     build:
       context: ./api/
       dockerfile: dockerfile
@@ -17,6 +18,7 @@ services:
       - mongosetup
       - redis
   app:
+    container_name: app
     build:
       context: ./client/
       dockerfile: dockerfile

@@ -42,7 +42,7 @@ export default {
   computed: {
     displayQuote() {
       if (this.sentence === null) return '';
-      if (!this.sentence.length) return this.$t('lyricsNotFound');
+      if (!this.sentence.quote) return this.$t('lyricsNotFound');
       return this.sentence.quote;
     },
     displayArtist() {

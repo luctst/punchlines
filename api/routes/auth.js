@@ -4,10 +4,30 @@ const authCtrl = require('@controllers/auth');
 const routerWrapper = require('@utils/routerWrapper');
 const checkRoutes = require('@middlewares/routeManager');
 const userConnected = require('@middlewares/isConnected');
+const parseResponse = require('@utils/parseResponse');
+
+function shouldStopIfConnected() {
+  return function inner(req, res, next) {
+    if (res.locals.session) {
+      if (
+        req.url === '/login' ||
+        req.url === '/register'
+      ) {
+        return parseResponse(res, { code: 204 });
+      }
+
+      return next();
+    }
+
+    if (req.url === '/logout') return parseResponse(res, { code: 403 });
+    return next();
+  }
+}
 
 const middlewares = [
   checkRoutes(),
-  userConnected(),
+  userConnected({ stopServer: false }),
+  shouldStopIfConnected(),
 ];
 
 Router

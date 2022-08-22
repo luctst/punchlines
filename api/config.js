@@ -52,6 +52,10 @@ module.exports = {
         path: '/lyrics',
         data: null,
       },
+      {
+        path: '/user/:uid',
+        data: null,
+      },
     ],
     post: [
       {
@@ -61,6 +65,20 @@ module.exports = {
             type: String,
             required: true,
           },
+          email: {
+            type: String,
+            required: true,
+            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+          },
+          password: {
+            type: String,
+            required: true,
+          },
+        },
+      },
+      {
+        path: '/auth/login',
+        data: {
           email: {
             type: String,
             required: true,

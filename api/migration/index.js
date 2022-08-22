@@ -1,5 +1,5 @@
 (async function() {
-  require('dotenv').config({ path: '../.env'});
+  require('~dotenv').config({ path: '../.env'});
   const mongoose = require('mongoose');
   const queryDb = require('@db/index');
   const isObject = require('@utils/isObject');
@@ -30,7 +30,7 @@
 
   try {
     if (mongoose.connection.readyState === 1) return true;
-    await mongoose.connect(process.env.DB_URL_PROD, {
+    await mongoose.connect(process.env.DB_URL_DEV, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

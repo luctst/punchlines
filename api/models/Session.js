@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 
-const generateRandomToken = require('@utils/generateRandomToken');
+const { randomFillSync } = require('crypto');
 
 const SessionsSchema = new mongoose.Schema(
   {
@@ -14,8 +14,8 @@ const SessionsSchema = new mongoose.Schema(
     token_refresh: {
       type: String,
       unique: true,
-      async default() {
-        return await generateRandomToken();
+      default() {
+        return randomFillSync(Buffer.alloc(8)).toString('hex');
       }
     },
   },

@@ -17,13 +17,16 @@ module.exports = function parseResponse(res, dataToSend) {
       modifyResponse: {
         message: dataToSend.message,
         stack: dataToSend.stack,
-        ...(res.locals.data &&
-          res.locals.data.newToken && { token: res.locals.data.newToken }),
+        ...(res.locals.newJwt && { newJwt: res.locals.newJwt }),
       },
     });
   }
 
   const ops = {};
+
+  if (res.locals.newJwt) {
+    ops.token = res.locals.newJwt;
+  }
 
   if (dataToSend.serverHeader) {
     ops.serverHeader = { ...dataToSend.serverHeader };
