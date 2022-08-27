@@ -3,6 +3,7 @@ const { compare } = require('bcrypt');
 const { cookieRefresh } = require('@/config');
 const queryDb = require('@db/index');
 const generateJwt = require('@utils/generateJwt');
+const generateRandomToken = require('@utils/generateRandomToken');
 
 function returnUserToClient(userData) {
   const keysToReturn = [
@@ -10,6 +11,10 @@ function returnUserToClient(userData) {
     'username',
     'jwt',
   ];
+
+  if (!userData) {
+    return [...keysToReturn];
+  }
 
   return Object
     .keys(userData)
@@ -78,7 +83,7 @@ exports.Register = async function register(req, res, session) {
 
   const newUser = await queryDb('users', 'create', [{ ...req.body }], { session });
   const newUserSession = await queryDb('session', 'create', [{ token_user_id: newUser._id }], { session });
-  const jwt = generateJwt({ uid: newUser._id }, newUserSession.token_refresh);
+  const jwt = generateJwt({ id: newUserSession._id }, newUserSession.token_refresh);
   
   res.cookie(
     cookieRefresh,
@@ -94,6 +99,58 @@ exports.Register = async function register(req, res, session) {
     code: 200,
     modifyResponse: {
       userData: returnUserToClient({ ...newUser._doc, jwt }),
+    },
+  };
+}
+
+exports.RefreshToken = async function (req, res, session) {
+  const error = {
+    code: 403,
+  };
+
+  if (
+    !req.cookies[cookieRefresh] ||
+    res.locals.session
+  ) return { ...error };
+
+  const userSession = await queryDb(
+    'session',
+    'findOne',
+    [{ token_refresh: req.cookies[cookieRefresh] }],
+    {
+      session,
+      populate: {
+        path: 'token_user_id',
+        select: returnUserToClient().join(' '),
+      },
+    },
+  );
+
+  if (!userSession) return { ...error };
+  
+  const newTokenRefresh = await generateRandomToken(8);
+  const jwt = generateJwt({ id: userSession._id.toString() }, newTokenRefresh);
+  await queryDb(
+    'session',
+    'findByIdAndUpdate',
+    [userSession._id.toString(), { token_refresh: newTokenRefresh }],
+    { session }
+  );
+  res.cookie(
+    cookieRefresh,
+    newTokenRefresh,
+    {
+      httpOnly: true,
+      path: '/',
+      sameSite: true,
+      Secure: true,
+    }
+  );
+
+  return {
+    code: 200,
+    modifyResponse: {
+      userData: returnUserToClient({ ...userSession.token_user_id, jwt }),
     },
   };
 }

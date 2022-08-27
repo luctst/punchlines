@@ -3,7 +3,7 @@ export default {
     lyricsNotFound: 'Aucunes punchlines n\'as pu être trouvé. Réessayez ou contactez-nous.',
     errorApi: 'Oupss, il y a une erreur veuillez réessayer en rechargant la page',
     placeholderLyrics: 'Vous désirez continuer les lyrics ? Cliquez içi.',
-    nav: 'À Propos | Accueil | Classement',
+    nav: 'Accueil | À propos | Classement',
     connexionHeader: 'Connexion',
     refreshSentence: 'Cliquez pour afficher une nouvelle punchline',
     about: [
@@ -22,12 +22,15 @@ export default {
       },
       success: 'Bienvenue {username}',
     },
+    user: {
+      title: 'Vos Lyrics',
+    },
   },
   en: {
     lyricsNotFound: 'No lyrics could be found, please try agin or contact us.',
     errorApi: 'Oups.. There is an error, please try reload the page',
     placeholderLyrics: 'Wanna continue the lyrics ? Click here.',
-    nav: 'About | Home | Ranking',
+    nav: 'Home | About | Ranking',
     connexionHeader: 'Connection',
     refreshSentence: 'Click to display new punchline',
     about: [
@@ -45,6 +48,9 @@ export default {
         password: 'The password must contain at least 8 characters, 1 lowercase, 1 uppercase, 1 number and 1 special character and 0 spaces',
       },
       success: 'Welcome {username}',
+    },
+    user: {
+      title: 'Your Lyrics',
     },
   },
 };

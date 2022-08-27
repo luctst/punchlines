@@ -49,6 +49,10 @@ module.exports = {
   routes: {
     get: [
       {
+        path: '/auth/refresh_token',
+        data: null,
+      },
+      {
         path: '/lyrics',
         data: null,
       },

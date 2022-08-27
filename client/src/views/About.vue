@@ -1,6 +1,5 @@
 <template>
   <main class="container">
-    <header-vue></header-vue>
     <section>
       <div v-for="(content, index) in c" :key="index">{{ content }}</div>
     </section>
@@ -8,13 +7,8 @@
 </template>
 
 <script>
-import HeaderVue from '@/components/HeaderVue.vue';
-
 export default {
   name: 'About',
-  components: {
-    HeaderVue,
-  },
   computed: {
     c() {
       return this.$i18n.t('about');

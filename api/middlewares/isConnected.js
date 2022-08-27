@@ -29,8 +29,8 @@ module.exports = function isConnected(ops = { stopServer: true }) {
       if (tokenSplit.length !== 2) return returnResponse();
       if (tokenSplit[0] !== 'Bearer') return returnResponse();
       if (/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/.test(tokenSplit[1]) === false) return returnResponse();
-
-      return tokenSplit[2];
+      
+      return tokenSplit[1];
     }
   };
 
@@ -60,11 +60,15 @@ module.exports = function isConnected(ops = { stopServer: true }) {
         resObj.locals.session = await queryDb('session', 'findById', [sessionData.sessionId]);
         return true;
       }
-
+      
       const session = await queryDb('session', 'findOne', [{ token_refresh: sessionData.refreshToken}]);
       const newTokenRefresh = await generateRandomToken(8);
-      const newJwt = generateJwt({ id: session._id }, newTokenRefresh);
-      resObj.locals.session = await queryDb('session', 'findByIdAndUpdate', [{ token_refresh: newTokenRefresh}]);
+      const newJwt = generateJwt({ id: session._id.toString() }, newTokenRefresh);
+      resObj.locals.session = await queryDb(
+        'session',
+        'findByIdAndUpdate',
+        [session._id.toString(), { token_refresh: newTokenRefresh}]
+      );
       resObj.locals.newJwt = newJwt;
 
       resObj.cookie(
