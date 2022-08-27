@@ -19,6 +19,11 @@ const routes = [
     name: 'User',
     component: () => import('../views/User.vue'),
   },
+  {
+    path: '/ranking/:id',
+    name: 'RankingItem',
+    component: () => import('../views/RankkingItem.vue'),
+  },
 ];
 
 const router = new VueRouter({

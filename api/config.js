@@ -1,3 +1,5 @@
+const { Types } = require('mongoose');
+
 module.exports = {
   apiVersion: 1,
   cookieRefresh: 'XSRF-TOKEN',
@@ -90,6 +92,23 @@ module.exports = {
           },
           password: {
             type: String,
+            required: true,
+          },
+        },
+      },
+      {
+        path: '/punchlines',
+        data: {
+          punchline: {
+            type: String,
+            required: true,
+          },
+          author: {
+            type: Types.ObjectId,
+            required: true,
+          },
+          lyrics_id: {
+            type: Types.ObjectId,
             required: true,
           },
         },

@@ -21,6 +21,9 @@
         <div class="row">
           <h2 class="col-12">{{ $t('user.title') }}:</h2>
         </div>
+        <p
+        v-if="!userData.punchlines.length"
+        class="lead mt-2 text-muted">{{ $t('user.noPunchlines ')}}</p>
       </main>
     </template>
   </section>

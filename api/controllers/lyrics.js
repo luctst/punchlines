@@ -1,7 +1,7 @@
 const dbQuery = require('@db/index');
 
-exports.returnLyricRandom = async function returnlyricrandom(req, res) {
-  const lyricsLength = await dbQuery('lyrics', 'countDocuments', [{}]);
+exports.returnLyricRandom = async function returnlyricrandom(req, res, session) {
+  const lyricsLength = await dbQuery('lyrics', 'countDocuments', [{}], { session });
   const quote = await dbQuery(
     'lyrics',
     'findOne',
@@ -22,7 +22,8 @@ exports.returnLyricRandom = async function returnlyricrandom(req, res) {
     code: 200,
     modifyResponse: {
       quote: quote.lyrics,
-      artist: quote.artist.name
+      artist: quote.artist.name,
+      id: quote._id,
     },
   };
 };

@@ -24,6 +24,15 @@ export default {
     },
     user: {
       title: 'Vos Lyrics',
+      noPunchlines: 'Vous n\'avez envoyé aucunes lyrics pour le moment, rendez-vous sur la page d\'accueil.',
+    },
+    punchlineForm: {
+      success: 'Lyrics créee avec succés !',
+      contentSuccess: 'Cliquez sur le bouton "inspecter" pour voir qui aime',
+      buttons: [
+        'Annuler',
+        'Inspect',
+      ],
     },
   },
   en: {
@@ -51,6 +60,15 @@ export default {
     },
     user: {
       title: 'Your Lyrics',
+      noPunchlines: 'You didn\'t send any lyrics, go to home page to send lyrics',
+    },
+    punchlineForm: {
+      success: 'Lyrics correctly created !',
+      contentSuccess: 'Click on the "inspect" button to see who likes',
+      buttons: [
+        'Cancel',
+        'Inspect',
+      ],
     },
   },
 };

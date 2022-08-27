@@ -1,6 +1,7 @@
 <template>
   <section class="home container">
     <loader v-if="showLoader"></loader>
+    <v-dialog></v-dialog>
     <div class="home--sentence">
       <blockquote class="blockquote">
         <h1 class="mb-0 text-center">{{ displayQuote }}</h1>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import http from '@/utils/http';
 import Loader from '@/components/Lodaer.vue';
 
@@ -38,7 +39,7 @@ export default {
     await this.filledSentence();
   },
   computed: {
-    ...mapGetters(['isConnected']),
+    ...mapGetters(['isConnected', 'getUserId']),
     displayQuote() {
       if (this.sentence === null) return '';
       if (!this.sentence.quote) return this.$t('lyricsNotFound');
@@ -49,6 +50,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['callApiAuth']),
     async fetchPunchline() {
       const resFetch = await http.get('/lyrics');
       return resFetch.data;
@@ -62,10 +64,53 @@ export default {
         this.$toasted.error(this.$i18n.t('errorApi'));
       }
     },
-    submitPunchline() {
-      if (!this.isConnected) {
-        this.$modal.show('log');
-        return false;
+    async submitPunchline() {
+      try {
+        if (!this.isConnected) {
+          this.$modal.show('log');
+          return false;
+        }
+
+        if (!this.lyrics) return false;
+        const res = await this.callApiAuth({
+          route: '/punchlines',
+          method: 'post',
+          body: { punchline: this.lyrics, author: this.getUserId, lyrics_id: this.sentence.id },
+        });
+        this.$modal.show(
+          'dialog',
+          {
+            title: this.$t('punchlineForm.success'),
+            text: this.$t('punchlineForm.contentSuccess'),
+            buttons: [
+              {
+                title: this.$t('punchlineForm.buttons[0]'),
+                handler: () => {
+                  this.$modal.hide('dialog');
+                },
+              },
+              {
+                title: this.$t('punchlineForm.buttons[1]'),
+                handler: () => {
+                  this.$router.push(`/ranking/${res.punchline_id}`);
+                },
+              },
+            ],
+          },
+        );
+
+        this.lyrics = null;
+        return true;
+      } catch (error) {
+        let errorMessage;
+
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        } else {
+          errorMessage = error.message;
+        }
+
+        this.$toasted.error(errorMessage);
       }
 
       return true;

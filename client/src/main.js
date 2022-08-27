@@ -33,7 +33,7 @@ Vue.use(
 );
 
 Vue.use(VueI18n);
-Vue.use(VModal);
+Vue.use(VModal, { dialog: true });
 
 const i18n = new VueI18n({
   locale: navigator.language.includes('-') ? navigator.language.split('-')[0] : navigator.language,
