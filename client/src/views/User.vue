@@ -23,7 +23,24 @@
         </div>
         <p
         v-if="!userData.punchlines.length"
-        class="lead mt-2 text-muted">{{ $t('user.noPunchlines ')}}</p>
+        class="lead mt-2 text-muted">{{ $t('user.noPunchlines ')}}
+        </p>
+        <div v-else class="list-group mt-3">
+          <div
+          v-for="(data, index) in userData.punchlines"
+          :key="index"
+          class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5>{{ data.punchline }}</h5>
+              <small>Created at {{ formatDate(data.createdAt) }}</small>
+            </div>
+            <p class="mt-1 mb-1">
+              Likes
+              <small class="text-muted">{{ data.likes.length }}</small>
+            </p>
+            <p class="text-danger" @click="deletePunchline(data._id)"><u>Delete</u></p>
+          </div>
+        </div>
       </main>
     </template>
   </section>
@@ -73,6 +90,13 @@ export default {
   },
   methods: {
     ...mapActions(['callApiAuth']),
+    deletePunchline(id) {
+      
+    },
+    formatDate(date) {
+      const dateObj = new Date(date);
+      return `${dateObj.getDay()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+    },
   },
 };
 </script>
@@ -80,5 +104,13 @@ export default {
 <style lang="scss" scoped>
 p {
   margin-bottom: 0;
+}
+.list-group-item {
+  background-color: transparent;
+}
+.text-danger {
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

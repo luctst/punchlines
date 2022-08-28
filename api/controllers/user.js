@@ -14,6 +14,14 @@ exports.getUser = async function getuser(req, res, session) {
         punchlines: 1,
         username: 1,
       },
+      populate: {
+        path: 'punchlines',
+        select: 'likes punchline lyrics_id createdAt',
+        populate: {
+          path: 'lyrics_id',
+          select: 'lyrics',
+        },
+      },
     },
   );
   if (!user) return { ...error };
