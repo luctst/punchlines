@@ -7,7 +7,6 @@
             {{ $tc('nav', index) }}
           </router-link>
           <template v-else>
-            <lang></lang>
             <div @click.prevent="headers[index].active = !headers[index].active">
               {{ filledLang }}
             </div>
@@ -39,14 +38,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Lang from '@/assets/svg/lang.svg';
 import ClickOutside from 'vue-click-outside';
 
 export default {
   name: 'HeaderVue',
-  components: {
-    Lang,
-  },
   directives: {
     ClickOutside,
   },

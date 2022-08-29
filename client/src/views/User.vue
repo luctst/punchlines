@@ -32,7 +32,12 @@
           :key="index"
           class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-              <h5><router-link :to="`/ranking/${data._id}`">{{ data.punchline }}</router-link></h5>
+              <h5>
+                <router-link
+                :to="{ name: 'Punchline', params: { id: data._id}}">
+                  {{ data.punchline }}
+                </router-link>
+              </h5>
               <small>{{ $t('user.createdAt') }} {{ formatDate(data.createdAt) }}</small>
             </div>
             <p class="mt-1 mb-1">

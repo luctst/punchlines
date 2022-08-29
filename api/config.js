@@ -62,6 +62,10 @@ module.exports = {
         path: '/user/:uid',
         data: null,
       },
+      {
+        path: '/punchlines/:id',
+        data: null,
+      },
     ],
     post: [
       {

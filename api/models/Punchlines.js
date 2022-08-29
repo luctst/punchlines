@@ -22,9 +22,13 @@ const PunchlinesSchema = new mongoose.Schema(
     likes: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'users',
-        },
+          author: mongoose.Schema.Types.ObjectId,
+          liked: {
+            type: Number,
+            min: 0,
+            max: 50,
+          },
+        }
       ],
       default: [],
     },

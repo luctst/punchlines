@@ -92,7 +92,7 @@ export default {
               {
                 title: this.$t('punchlineForm.buttons[1]'),
                 handler: () => {
-                  this.$router.push(`/ranking/${res.punchline_id}`);
+                  this.$router.push({ name: 'Punchline', params: { id: res.punchline_id } });
                 },
               },
             ],

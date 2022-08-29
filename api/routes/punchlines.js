@@ -11,7 +11,9 @@ const middlewares = [
 ];
 
 Router
+  .get('/:id', middlewares, routerWrapper(punchlinesCtrl.getPunchline))
   .post('/', middlewares, routerWrapper(punchlinesCtrl.create))
+  .post('/:id/likes', middlewares, routerWrapper(punchlinesCtrl.addLikes))
   .delete('/:id', middlewares, routerWrapper(punchlinesCtrl.delete));
 
 module.exports = Router;

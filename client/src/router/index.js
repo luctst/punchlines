@@ -20,9 +20,19 @@ const routes = [
     component: () => import('../views/User.vue'),
   },
   {
-    path: '/ranking/:id',
-    name: 'RankingItem',
-    component: () => import('../views/RankkingItem.vue'),
+    path: '/ranking',
+    component: () => import('../views/Ranking.vue'),
+    children: [
+      {
+        path: 'lyric/:id',
+        name: 'Lyric',
+      },
+      {
+        path: 'punchline/:id',
+        name: 'Punchline',
+        component: () => import('../components/Punchline.vue'),
+      },
+    ],
   },
 ];
 
