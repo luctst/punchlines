@@ -114,5 +114,11 @@ module.exports = {
         },
       },
     ],
+    delete: [
+      {
+        path: '/punchlines/:id',
+        data: null,
+      },
+    ],
   },
 }

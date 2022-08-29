@@ -25,6 +25,14 @@ export default {
     user: {
       title: 'Vos Lyrics',
       noPunchlines: 'Vous n\'avez envoyé aucunes lyrics pour le moment, rendez-vous sur la page d\'accueil.',
+      createdAt: 'Crée le',
+      likes: 'J\'aime',
+      delete: 'Supprimer',
+      modal: {
+        title: 'Supprimer la lyric {punchline} ?',
+        buttons: ['Annuler', 'Supprimer'],
+        success: 'Lyric supprimée !',
+      },
     },
     punchlineForm: {
       success: 'Lyrics créee avec succés !',
@@ -61,6 +69,14 @@ export default {
     user: {
       title: 'Your Lyrics',
       noPunchlines: 'You didn\'t send any lyrics, go to home page to send lyrics',
+      createdAt: 'Created at',
+      likes: 'Likes',
+      delete: 'Delete',
+      modal: {
+        title: 'Delete the {punchline} lyrics ?',
+        buttons: ['Cancel', 'Delete'],
+        success: 'Lyric correctly deleted',
+      },
     },
     punchlineForm: {
       success: 'Lyrics correctly created !',

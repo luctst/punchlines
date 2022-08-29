@@ -11,6 +11,7 @@ const middlewares = [
 ];
 
 Router
-  .post('/', middlewares, routerWrapper(punchlinesCtrl.create));
+  .post('/', middlewares, routerWrapper(punchlinesCtrl.create))
+  .delete('/:id', middlewares, routerWrapper(punchlinesCtrl.delete));
 
 module.exports = Router;

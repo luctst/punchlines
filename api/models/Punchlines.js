@@ -53,6 +53,27 @@ PunchlinesSchema.post('save', async function updateUserPunchline() {
   } catch (error) {
     throw error;
   }
+});
+
+PunchlinesSchema.post('findOneAndDelete', async function deletePunchlines(doc) {
+  try {
+    const dataRemove = [
+      { model: 'users', fieldToUpdate: 'punchlines', fieldId: 'author' },
+      { model: 'lyrics', fieldToUpdate: 'punchlines', fieldId: 'lyrics_id' },
+    ];
+
+    return await Promise.all(
+      dataRemove.map(async (drm) => {
+        await mongoose.model(drm.model).findByIdAndUpdate(
+          doc[drm.fieldId],
+          { $pull: { [drm.fieldToUpdate]: { $in: [doc._id] }}},
+          { lean: true, returnDocument: 'after' },
+        );
+      }),
+    );
+  } catch (error) {
+    throw error;
+  }
 })
 
 module.exports = PunchlinesSchema;

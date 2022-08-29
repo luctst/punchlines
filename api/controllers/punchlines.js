@@ -9,3 +9,10 @@ exports.create = async function createPunchline(req, res, session) {
     },
   };
 }
+
+exports.delete = async function deletePunchline(req, res, session) {
+  await queryDb('punchline', 'deleteOneById', [req.params.id], { session });
+  return {
+    code: 204,
+  };
+}

@@ -1,5 +1,6 @@
 <template>
   <section class="mt-3">
+    <v-dialog></v-dialog>
     <loader v-if="!userData"></loader>
     <template v-else>
       <header class="header container">
@@ -31,14 +32,18 @@
           :key="index"
           class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-              <h5>{{ data.punchline }}</h5>
-              <small>Created at {{ formatDate(data.createdAt) }}</small>
+              <h5><router-link :to="`/ranking/${data._id}`">{{ data.punchline }}</router-link></h5>
+              <small>{{ $t('user.createdAt') }} {{ formatDate(data.createdAt) }}</small>
             </div>
             <p class="mt-1 mb-1">
-              Likes
+              {{ $t('user.likes') }}
               <small class="text-muted">{{ data.likes.length }}</small>
             </p>
-            <p class="text-danger" @click="deletePunchline(data._id)"><u>Delete</u></p>
+            <p
+            class="text-danger"
+            @click="deletePunchline(data._id, data.punchline, index)">
+              <u>{{ $t('user.delete') }}</u>
+            </p>
           </div>
         </div>
       </main>
@@ -90,12 +95,47 @@ export default {
   },
   methods: {
     ...mapActions(['callApiAuth']),
-    deletePunchline(id) {
-      
+    deletePunchline(id, punchline, index) {
+      try {
+        this.$modal.show(
+          'dialog',
+          {
+            text: this.$t('user.modal.title', { punchline }),
+            buttons: [
+              {
+                title: this.$t('user.modal.buttons[0]'),
+                handler: () => {
+                  this.$modal.hide('dialog');
+                },
+              },
+              {
+                title: this.$t('user.modal.buttons[1]'),
+                handler: async () => {
+                  await this.callApiAuth({ method: 'delete', route: `/punchlines/${id}` });
+
+                  this.userData.punchlines.splice(index, 1);
+                  this.$modal.hide('dialog');
+                  this.$toasted.success(this.$t('user.modal.success'));
+                },
+              },
+            ],
+          },
+        );
+      } catch (error) {
+        let errorMessage;
+
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        } else {
+          errorMessage = error.message;
+        }
+
+        this.$toasted.error(errorMessage);
+      }
     },
     formatDate(date) {
       const dateObj = new Date(date);
-      return `${dateObj.getDay()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+      return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
     },
   },
 };

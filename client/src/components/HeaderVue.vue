@@ -27,7 +27,7 @@
           </template>
         </li>
         <li class="header--nav--ul--li">
-          <router-link v-if="getUserId" :to="`/${getUserId}`">
+          <router-link v-if="getUserId" :to="`/user/${getUserId}`">
             {{ getUserName }}
           </router-link>
           <div v-else @click="$modal.show('log')">{{ $t('connexionHeader') }}</div>
