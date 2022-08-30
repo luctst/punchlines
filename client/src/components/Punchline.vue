@@ -4,7 +4,7 @@
     <template v-else>
       <header class="container">
         <div class="row border-bottom border-secondary mb-2 d-flex flex-direction-row">
-          <h1 class="col-12 display-2"><em>{{ punchline.punchline }}</em></h1>
+          <h1 class="col-12" :class="sizeH1"><em>{{ punchline.punchline }}</em></h1>
           <small class="text-muted mb-2">By
             <strong>
               <router-link :to="{ name: 'User', params: { uid: punchline.author._id }}">
@@ -114,9 +114,11 @@ import { mapActions, mapGetters } from 'vuex';
 import debounce from '@/utils/debounce';
 import Like from '@/assets/svg/like.svg';
 import Loader from '@/components/Lodaer.vue';
+import errorMixin from '@/mixins/error';
 
 export default {
   name: 'Punchline',
+  mixins: [errorMixin],
   components: {
     Loader,
     Like,
@@ -125,10 +127,14 @@ export default {
     return {
       punchline: null,
       likes: 0,
+      watchDebounce: false,
     };
   },
   computed: {
     ...mapGetters(['getUserId']),
+    sizeH1() {
+      return this.punchline.punchline.length >= 25 ? 'display-5' : 'display-3';
+    },
     totalLikes() {
       return this.punchline.likes.reduce(
         (prev, next) => prev + next.liked,
@@ -136,7 +142,9 @@ export default {
       );
     },
     likeAuthorIndex() {
-      return this.punchline.likes.findIndex((l) => l.author === this.getUserId);
+      return this.punchline.likes.length
+        ? this.punchline.likes.findIndex((l) => l.author === this.getUserId)
+        : 0;
     },
   },
   async mounted() {
@@ -146,36 +154,51 @@ export default {
         route: `/punchlines/${this.$route.params.id}`,
       })).punchline;
       this.likes = this.countLikes();
+      return true;
     } catch (error) {
-      let errorMessage;
-
-      if (error.response) {
-        errorMessage = error.response.data.message;
-      } else {
-        errorMessage = error.message;
-      }
-
-      this.$toasted.error(errorMessage);
+      this.handleErrorApi(error);
     }
+
+    return true;
   },
   watch: {
     likes: debounce(async function (newVal) {
-      const res = await this.callApiAuth({
-        method: 'patch',
-        route: `/punchlines/${this.$route.params.id}/likes`,
-        body: {
-          author_id: this.punchline.author._id,
-          likes: newVal,
-        },
-      });
+      try {
+        if (!this.watchDebounce) return false;
 
-      this.punchline.likes[this.likeAuthorIndex].liked = res.author_likes;
+        const res = await this.callApiAuth({
+          method: 'patch',
+          route: `/punchlines/${this.$route.params.id}/likes`,
+          body: {
+            author_id: this.punchline.author._id,
+            likes: newVal,
+          },
+        });
+
+        if (!this.punchline.likes.length) {
+          this.punchline.likes.push({
+            _id: res.liked_id,
+            author: this.getUserId,
+            liked: res.author_likes,
+          });
+          return true;
+        }
+
+        this.punchline.likes[this.likeAuthorIndex].liked = res.author_likes;
+        return true;
+      } catch (error) {
+        this.handleErrorApi(error);
+      }
+
+      return true;
     }, 5000),
   },
   methods: {
     ...mapActions(['callApiAuth']),
     countLikes() {
-      return this.punchline.likes.find((l) => l.author === this.getUserId).liked;
+      return this.punchline.likes.length
+        ? this.punchline.likes.find((l) => l.author === this.getUserId).liked
+        : 0;
     },
     pulse() {
       const sonarClap = document.getElementById('sonar-clap');
@@ -226,6 +249,7 @@ export default {
       }
 
       const upClickCounter = () => {
+        this.watchDebounce = true;
         const clickCounter = document.getElementById('clicker');
         const totalClickCounter = document.getElementById('totalCounter');
 

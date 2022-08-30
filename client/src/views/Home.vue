@@ -22,9 +22,11 @@
 import { mapGetters, mapActions } from 'vuex';
 import http from '@/utils/http';
 import Loader from '@/components/Lodaer.vue';
+import errorMixin from '@/mixins/error';
 
 export default {
   name: 'Home',
+  mixins: [errorMixin],
   components: {
     Loader,
   },
@@ -102,15 +104,7 @@ export default {
         this.lyrics = null;
         return true;
       } catch (error) {
-        let errorMessage;
-
-        if (error.response) {
-          errorMessage = error.response.data.message;
-        } else {
-          errorMessage = error.message;
-        }
-
-        this.$toasted.error(errorMessage);
+        this.handleErrorApi(error);
       }
 
       return true;

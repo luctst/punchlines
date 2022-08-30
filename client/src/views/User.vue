@@ -59,9 +59,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import Loader from '@/components/Lodaer.vue';
+import errorMixin from '@/mixins/error';
 
 export default {
   name: 'User',
+  mixins: [errorMixin],
   components: {
     Loader,
   },
@@ -85,15 +87,7 @@ export default {
 
       this.userData = { ...res.user };
     } catch (error) {
-      let errorMessage;
-
-      if (error.response) {
-        errorMessage = error.response.data.message;
-      } else {
-        errorMessage = error.message;
-      }
-
-      this.$toasted.error(errorMessage);
+      this.handleErrorApi(error);
     }
 
     return true;
@@ -116,26 +110,22 @@ export default {
               {
                 title: this.$t('user.modal.buttons[1]'),
                 handler: async () => {
-                  await this.callApiAuth({ method: 'delete', route: `/punchlines/${id}` });
+                  try {
+                    await this.callApiAuth({ method: 'delete', route: `/punchlines/${id}` });
 
-                  this.userData.punchlines.splice(index, 1);
-                  this.$modal.hide('dialog');
-                  this.$toasted.success(this.$t('user.modal.success'));
+                    this.userData.punchlines.splice(index, 1);
+                    this.$modal.hide('dialog');
+                    this.$toasted.success(this.$t('user.modal.success'));
+                  } catch (error) {
+                    this.handleErrorApi(error);
+                  }
                 },
               },
             ],
           },
         );
       } catch (error) {
-        let errorMessage;
-
-        if (error.response) {
-          errorMessage = error.response.data.message;
-        } else {
-          errorMessage = error.message;
-        }
-
-        this.$toasted.error(errorMessage);
+        this.handleErrorApi(error);
       }
     },
     formatDate(date) {

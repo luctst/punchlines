@@ -44,9 +44,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import PasswordValidator from 'password-validator';
+import errorMixin from '@/mixins/error';
 
 export default {
   name: 'ModalLog',
+  mixins: [errorMixin],
   data() {
     return {
       wantLog: true,
@@ -177,15 +179,7 @@ export default {
         this.$modal.hide('log');
       } catch (error) {
         this.formSubmit = false;
-        let errorMessage;
-
-        if (error.response) {
-          errorMessage = error.response.data.message;
-        } else {
-          errorMessage = error.message;
-        }
-
-        this.$toasted.error(errorMessage);
+        this.handleErrorApi(error);
       }
 
       return true;

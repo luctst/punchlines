@@ -23,7 +23,11 @@ exports.addLikes = async function addlikes(req, res, session) {
       (prev, next) => {
         const oldPrev = { ...prev };
         
-        if (next.author.toString() === authorId) oldPrev.modifyResponse.author_likes = next.liked;
+        if (next.author.toString() === authorId) {
+          oldPrev.modifyResponse.author_likes = next.liked;
+          oldPrev.modifyResponse.liked_id = next._id;
+        };
+
         oldPrev.modifyResponse.total_likes = oldPrev.modifyResponse.total_likes + next.liked;
         return oldPrev;
       },
@@ -37,6 +41,32 @@ exports.addLikes = async function addlikes(req, res, session) {
       }
     );
   };
+
+  async function updateUserScore(userId, scoreSend) {
+    const userData = await queryDb(
+      'users',
+      'findById',
+      [userId],
+      {
+        session,
+        projection: {
+          score: 1,
+        },
+      }
+    );
+    const newScore = (scoreSend - userData.score) + userData.score;
+    await queryDb(
+      'users',
+      'findByIdAndUpdate',
+      [
+        userId,
+        {
+          $set: { score: newScore },
+        },
+      ],
+      { session },
+    );
+  }
 
   const error = { code: 400 };
   const punchline = await queryDb('punchline', 'findById', [req.params.id], { session });
@@ -58,6 +88,7 @@ exports.addLikes = async function addlikes(req, res, session) {
       { session },
     );
     
+    await updateUserScore(req.body.author_id, req.body.likes);
     return calculLikesAndReturnToClient(newPunchline.likes, req.body.author_id);
   }
 
@@ -74,7 +105,20 @@ exports.addLikes = async function addlikes(req, res, session) {
     ],
     { session },
   );
+  
+  await queryDb(
+    'users',
+    'findByIdAndUpdate',
+    [
+      req.body.author_id,
+      {
+        $inc: { score: req.body.likes },
+      },
+    ],
+    { session },
+  );
 
+  await updateUserScore(req.body.author_id, req.body.likes);
   return calculLikesAndReturnToClient(newPunch.likes, req.body.author_id);
 }
 

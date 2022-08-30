@@ -80,13 +80,4 @@ PunchlinesSchema.post('findOneAndDelete', async function deletePunchlines(doc) {
   }
 });
 
-PunchlinesSchema.post('findOneAndUpdate', async function updateUserScore(doc) {
-  try {
-    console.log(doc);
-    // TODO: When punchline is update update score from users.
-  } catch (error) {
-    throw error;
-  }
-})
-
 module.exports = PunchlinesSchema;

@@ -33,7 +33,7 @@ module.exports = (response, code, data = {}) => {
         ...data.serverHeader,
       });
       if (data.token) {
-        return response.status(code).json({ token: data.token });
+        return response.status(200).json({ token: data.token });
       }
 
       return response.status(code).end();
