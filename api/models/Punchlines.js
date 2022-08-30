@@ -26,7 +26,7 @@ const PunchlinesSchema = new mongoose.Schema(
           liked: {
             type: Number,
             min: 0,
-            max: 50,
+            max: 100,
           },
         }
       ],
@@ -75,6 +75,15 @@ PunchlinesSchema.post('findOneAndDelete', async function deletePunchlines(doc) {
         );
       }),
     );
+  } catch (error) {
+    throw error;
+  }
+});
+
+PunchlinesSchema.post('findOneAndUpdate', async function updateUserScore(doc) {
+  try {
+    console.log(doc);
+    // TODO: When punchline is update update score from users.
   } catch (error) {
     throw error;
   }

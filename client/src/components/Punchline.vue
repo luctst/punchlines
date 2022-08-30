@@ -26,15 +26,20 @@
           <p class="col-12 lead">
             Total likes
             <small class="text-muted">
-              <strong>10</strong>
+              <strong>{{ totalLikes }}</strong>
             </small>
           </p>
         </div>
         <div class="row d-flex justify-content-center">
           <div class="canvas">
-            <div id="clap" class="clap-container" @click="animateLike">
+            <div id="totalCounter" class="total-counter"></div>
+            <div id="clap" class="clap-container" @click="animateLike" @mouseover="pulse">
               <like></like>
             </div>
+            <div id="clicker" class="click-counter">
+              <span class="counter"></span>
+            </div>
+            <div id="sonar-clap" class="clap-container-sonar"></div>
             <div id="particles" class="particles-container">
               <div class="triangle">
                 <div class="square"></div>
@@ -52,6 +57,7 @@
                 <div class="square"></div>
               </div>
             </div>
+
             <div id="particles-2" class="particles-container">
               <div class="triangle">
                 <div class="square"></div>
@@ -104,7 +110,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import debounce from '@/utils/debounce';
 import Like from '@/assets/svg/like.svg';
 import Loader from '@/components/Lodaer.vue';
 
@@ -117,7 +124,20 @@ export default {
   data() {
     return {
       punchline: null,
+      likes: 0,
     };
+  },
+  computed: {
+    ...mapGetters(['getUserId']),
+    totalLikes() {
+      return this.punchline.likes.reduce(
+        (prev, next) => prev + next.liked,
+        0,
+      );
+    },
+    likeAuthorIndex() {
+      return this.punchline.likes.findIndex((l) => l.author === this.getUserId);
+    },
   },
   async mounted() {
     try {
@@ -125,6 +145,7 @@ export default {
         method: 'get',
         route: `/punchlines/${this.$route.params.id}`,
       })).punchline;
+      this.likes = this.countLikes();
     } catch (error) {
       let errorMessage;
 
@@ -137,8 +158,32 @@ export default {
       this.$toasted.error(errorMessage);
     }
   },
+  watch: {
+    likes: debounce(async function (newVal) {
+      const res = await this.callApiAuth({
+        method: 'patch',
+        route: `/punchlines/${this.$route.params.id}/likes`,
+        body: {
+          author_id: this.punchline.author._id,
+          likes: newVal,
+        },
+      });
+
+      this.punchline.likes[this.likeAuthorIndex].liked = res.author_likes;
+    }, 5000),
+  },
   methods: {
     ...mapActions(['callApiAuth']),
+    countLikes() {
+      return this.punchline.likes.find((l) => l.author === this.getUserId).liked;
+    },
+    pulse() {
+      const sonarClap = document.getElementById('sonar-clap');
+      sonarClap.classList.add('hover-active');
+      setTimeout(() => {
+        sonarClap.classList.remove('hover-active');
+      }, 2000);
+    },
     animateLike() {
       const minDeg = 1;
       const maxDeg = 72;
@@ -160,26 +205,41 @@ export default {
         },
       ];
 
-      // function runAnimationCycle(el, className) {
-      //   if (el && !el.classList.contains(className)) {
-      //     el.classList.add(className);
-      //   } else {
-      //     el.classList.remove(className);
-      //     el.offsetWidth;
-      //     // Trigger a reflow in between removing and adding the class name
-      //     el.classList.add(className);
-      //   }
-      // }
+      function runAnimationCycle(el, className) {
+        if (el && !el.classList.contains(className)) {
+          el.classList.add(className);
+        } else {
+          el.classList.remove(className);
+          void el.offsetWidth; // eslint-disable-line
+          el.classList.add(className);
+        }
+      }
 
       function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
-      function addRandomParticlesRotation(particlesName, mndeg, mxdeg) {
+      function addRandomParticlesRotation(particlesName, mnDeg, mxDeg) {
         const particles = document.getElementById(particlesName);
-        const randomRotationAngle = `${getRandomInt(mndeg, mxdeg)}deg`;
+        const randomRotationAngle = `${getRandomInt(mnDeg, mxDeg)}deg`;
         particles.style.transform = `rotate(${randomRotationAngle})`;
       }
+
+      const upClickCounter = () => {
+        const clickCounter = document.getElementById('clicker');
+        const totalClickCounter = document.getElementById('totalCounter');
+
+        this.likes += 1;
+        clickCounter.children[0].innerText = `+${this.likes}`;
+
+        if (clickCounter.classList.contains('first-active')) {
+          runAnimationCycle(clickCounter, 'active');
+        } else {
+          runAnimationCycle(clickCounter, 'first-active');
+        }
+        runAnimationCycle(totalClickCounter, 'fader');
+        return true;
+      };
 
       function runParticleAnimationCycle(el, className, duration) {
         if (el && !el.classList.contains(className)) {
@@ -195,22 +255,34 @@ export default {
         particlesClasses.forEach((el, i) => {
           runParticleAnimationCycle(particles.children[i], el.class, dur);
         });
-        // for (let i = 0; i < particlesClasses.length; i++) {
-        //   runParticleAnimationCycle(particles.children[i], particlesClasses[i].class, dur);
-        // }
-        // Boolean functionality only to activate particles2, particles3 when needed
         particles.classList.add('animating');
         setTimeout(() => {
           particles.classList.remove('animating');
         }, dur);
       }
 
-      document.getElementById('clap').onclick = function cl() {
+      document.getElementById('clap').onmouseover = () => {
+        const sonarClap = document.getElementById('sonar-clap');
+        sonarClap.classList.add('hover-active');
+        setTimeout(() => {
+          sonarClap.classList.remove('hover-active');
+        }, 2000);
+      };
+
+      document.getElementById('clap').onclick = () => {
+        if (this.likes >= 100) {
+          this.$toasted.error(this.$t('punchline.tooManyLikes'));
+          return false;
+        }
+
         const clap = document.getElementById('clap');
         const particles = document.getElementById('particles');
         const particles2 = document.getElementById('particles-2');
         const particles3 = document.getElementById('particles-3');
         clap.classList.add('clicked');
+        upClickCounter();
+
+        runAnimationCycle(clap, 'scale');
 
         if (!particles.classList.contains('animating')) {
           animateParticles(particles, 700);
@@ -219,6 +291,8 @@ export default {
         } else if (!particles3.classList.contains('animating')) {
           animateParticles(particles3, 700);
         }
+
+        return true;
       };
     },
   },
@@ -226,7 +300,185 @@ export default {
 </script>
 
 <style lang="scss">
-$default-clap-color: #03a87c;
+@import '@/assets/_variables.scss';
+$default-clap-color: $mainColor;
+
+.canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  position: relative;
+
+  .total-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: absolute;
+    margin-top: -45px;
+    color: gray;
+    font-family: sans-serif;
+    font-size: 16px;
+  }
+
+  .total-counter.fader {
+    animation: fade-in 1400ms forwards;
+  }
+
+  .clap-container {
+    background-color: $secondColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 50%;
+    z-index: 2;
+    cursor: pointer;
+
+    svg {
+      background-color: $secondColor;
+      height: 40px;
+      width: 40px;
+    }
+
+    .clap-icon {
+      font-size: 30px;
+      color: $default-clap-color;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .clap-container:hover {
+    border: 1px solid $default-clap-color;
+  }
+
+  .clap-container.scale {
+    animation: scaleAndBack 700ms forwards;
+  }
+
+  .click-counter {
+    background-color: $default-clap-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: 132px;
+    border-radius: 50%;
+    z-index: 1;
+
+    .counter {
+      font-family: sans-serif;
+      font-size: 14px;
+      color: #fff;
+    }
+  }
+
+  .click-counter.first-active {
+    animation: first-bump-in 1s forwards;
+  }
+
+  .click-counter.active {
+    animation: bump-in 1s forwards;
+  }
+
+  .clap-container-sonar {
+    width: 60px;
+    height: 60px;
+    background: $default-clap-color;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0;
+    z-index: 0;
+  }
+
+  .hover-active {
+    animation: sonar-wave 2s forwards;
+  }
+
+  .particles-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+
+    /* border: 1px solid gray; */
+    /* z-index: 3; */
+    .triangle {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 10px solid red;
+      border-bottom: 4px solid transparent;
+      position: absolute;
+
+      .square {
+        width: 5px;
+        height: 5px;
+        background: $default-clap-color;
+        position: absolute;
+        left: -15px;
+        top: 0;
+      }
+    }
+
+    .pop-top {
+      animation: pop-top 1s forwards;
+    }
+
+    .pop-top-left {
+      animation: pop-top-left 1s forwards;
+    }
+
+    .pop-top-right {
+      animation: pop-top-right 1s forwards;
+    }
+
+    .pop-bottom-right {
+      animation: pop-bottom-right 1s forwards;
+    }
+
+    .pop-bottom-left {
+      animation: pop-bottom-left 1s forwards;
+    }
+  }
+}
+
+// * * * Animations * * * //
+@keyframes sonar-wave {
+  0% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+// * * * Pop Animations * * * //
 @keyframes pop-top {
   0% {
     transform: translate(0, 0) rotate(0);
@@ -286,84 +538,52 @@ $default-clap-color: #03a87c;
     opacity: 0;
   }
 }
-.canvas {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 300px;
-  position: relative;
 
-  .clap-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border: 1px solid rgba(0, 0, 0, .15);
-    border-radius: 50%;
-    z-index: 2;
-    background: transparent;
-    cursor: pointer;
-
-    svg {
-      height: 28px;
-      width: 28px;
-    }
-
-    .clap-icon {
-      font-size: 30px;
-      color: $default-clap-color;
-      width: 30px;
-      height: 30px;
-    }
+@keyframes first-bump-in {
+  0% {
+    transform: translateY(-65px);
+    opacity: 1;
   }
 
-  .particles-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-    position: absolute;
+  50% {
+    transform: translateY(-80px);
+    opacity: 1;
+  }
 
-    .triangle {
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      border-top: 10px solid red;
-      border-bottom: 4px solid transparent;
-      position: absolute;
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
 
-      .square {
-        width: 5px;
-        height: 5px;
-        background: $default-clap-color;
-        position: absolute;
-        left: -15px;
-        top: 0;
-      }
-    }
+@keyframes bump-in {
+  0% {
+    transform: translateY(-80px) scale(0.9);
+    opacity: 1;
+  }
 
-    .pop-top {
-      animation: pop-top 1s forwards;
-    }
+  50% {
+    transform: translateY(-80px) scale(1);
+    opacity: 1;
+  }
 
-    .pop-top-left {
-      animation: pop-top-left 1s forwards;
-    }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
 
-    .pop-top-right {
-      animation: pop-top-right 1s forwards;
-    }
+@keyframes scaleAndBack {
+  0% {
+    transform: scale(1);
+  }
 
-    .pop-bottom-right {
-      animation: pop-bottom-right 1s forwards;
-    }
+  50% {
+    transform: scale(1.15);
+  }
 
-    .pop-bottom-left {
-      animation: pop-bottom-left 1s forwards;
-    }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

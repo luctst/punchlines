@@ -16,6 +16,7 @@ module.exports = function queryFindByIdAndUpdate(Model, mid, dataToUpdate, ops) 
       ...(ops && ops.session && { session: ops.session }),
       lean: true,
       returnDocument: 'after',
+      new: true,
     }
   );
 };

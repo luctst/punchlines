@@ -42,6 +42,9 @@ export default {
         'Inspect',
       ],
     },
+    punchline: {
+      tooManyLikes: 'Vous avez atteint la limite de likes',
+    },
   },
   en: {
     lyricsNotFound: 'No lyrics could be found, please try agin or contact us.',
@@ -85,6 +88,9 @@ export default {
         'Cancel',
         'Inspect',
       ],
+    },
+    punchline: {
+      tooManyLikes: 'You hit the amount limit of likes',
     },
   },
 };

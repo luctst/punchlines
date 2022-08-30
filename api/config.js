@@ -124,5 +124,22 @@ module.exports = {
         data: null,
       },
     ],
+    patch: [
+      {
+        path: '/punchlines/:id/likes',
+        data: {
+          author_id: {
+            type: Types.ObjectId,
+            required: true,
+          },
+          likes: {
+            type: Number,
+            required: true,
+            min: 0,
+            max: 100,
+          },
+        },
+      },
+    ],
   },
 }
