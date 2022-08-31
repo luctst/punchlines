@@ -24,15 +24,8 @@ export default {
       if (this.getJwt) return true;
       await this.refreshSession();
     } catch (error) {
-      let errorMessage;
-
-      if (error.response) {
-        errorMessage = error.response.data.message;
-      } else {
-        errorMessage = error.message;
-      }
-
-      this.$toasted.error(errorMessage);
+      if (error.response) return false;
+      return this.$toasted.error(error.message);
     }
 
     return true;

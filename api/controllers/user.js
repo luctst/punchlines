@@ -16,7 +16,7 @@ exports.getUser = async function getuser(req, res, session) {
       },
       populate: {
         path: 'punchlines',
-        select: 'likes punchline lyrics_id createdAt',
+        select: 'likes punchline lyrics_id createdAt author',
         populate: {
           path: 'lyrics_id',
           select: 'lyrics',

@@ -98,7 +98,11 @@
       <footer class="container d-flex align-items-center border-top border-secondary mt-auto">
         <figure class="text-center w-100 mb-0 mt-3">
           <blockquote class="blockquote">
-            <p>{{ punchline.lyrics_id.lyrics }}</p>
+            <p>
+              <router-link :to="{ name: 'Lyric', params: { id: punchline.lyrics_id._id } }">
+                {{ punchline.lyrics_id.lyrics }}
+              </router-link>
+            </p>
           </blockquote>
           <figcaption class="blockquote-footer">
             {{ punchline.lyrics_id.artist.name }}
@@ -131,7 +135,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getUserId']),
+    ...mapGetters(['getUserId', 'isConnected']),
     sizeH1() {
       return this.punchline.punchline.length >= 25 ? 'display-5' : 'display-3';
     },
@@ -142,6 +146,8 @@ export default {
       );
     },
     likeAuthorIndex() {
+      if (!this.isConnected) return 0;
+
       return this.punchline.likes.length
         ? this.punchline.likes.findIndex((l) => l.author === this.getUserId)
         : 0;
@@ -152,6 +158,7 @@ export default {
       this.punchline = (await this.callApiAuth({
         method: 'get',
         route: `/punchlines/${this.$route.params.id}`,
+        skipAuth: true,
       })).punchline;
       this.likes = this.countLikes();
       return true;
@@ -196,6 +203,7 @@ export default {
   methods: {
     ...mapActions(['callApiAuth']),
     countLikes() {
+      if (!this.isConnected) return 0;
       return this.punchline.likes.length
         ? this.punchline.likes.find((l) => l.author === this.getUserId).liked
         : 0;
@@ -208,6 +216,11 @@ export default {
       }, 2000);
     },
     animateLike() {
+      if (!this.isConnected) {
+        this.$modal.show('log');
+        return false;
+      }
+
       const minDeg = 1;
       const maxDeg = 72;
       const particlesClasses = [
@@ -318,6 +331,8 @@ export default {
 
         return true;
       };
+
+      return true;
     },
   },
 };

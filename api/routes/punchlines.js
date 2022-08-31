@@ -11,7 +11,7 @@ const middlewares = [
 ];
 
 Router
-  .get('/:id', middlewares, routerWrapper(punchlinesCtrl.getPunchline))
+  .get('/:id', checkRoutes(), routerWrapper(punchlinesCtrl.getPunchline))
   .post('/', middlewares, routerWrapper(punchlinesCtrl.create))
   .delete('/:id', middlewares, routerWrapper(punchlinesCtrl.delete))
   .patch('/:id/likes', middlewares, routerWrapper(punchlinesCtrl.addLikes));

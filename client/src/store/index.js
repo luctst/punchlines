@@ -30,11 +30,14 @@ export default new Vuex.Store({
     async callApiAuth({ commit, state }, payload) {
       let res;
       const methodLowerCase = payload.method.toLowerCase();
-      const headers = {
-        headers: {
+      const skipAuth = Object.prototype.hasOwnProperty.call(payload, 'skipAuth') ? payload.skipAuth : false;
+      const headers = {};
+
+      if (!skipAuth) {
+        headers.headers = {
           Authorization: `Bearer ${state.usersData.jwt}`,
-        },
-      };
+        };
+      }
 
       if (methodLowerCase !== 'get' && methodLowerCase !== 'delete') {
         res = await http[methodLowerCase](payload.route, { ...payload.body }, { ...headers });

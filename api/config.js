@@ -59,6 +59,10 @@ module.exports = {
         data: null,
       },
       {
+        path: '/lyrics/:id',
+        data: null,
+      },
+      {
         path: '/user/:uid',
         data: null,
       },

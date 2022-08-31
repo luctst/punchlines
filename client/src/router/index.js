@@ -26,6 +26,7 @@ const routes = [
       {
         path: 'lyric/:id',
         name: 'Lyric',
+        component: () => import('../components/Lyric.vue'),
       },
       {
         path: 'punchline/:id',

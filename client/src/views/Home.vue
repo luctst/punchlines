@@ -1,20 +1,26 @@
 <template>
   <section class="home container">
-    <loader v-if="showLoader"></loader>
     <v-dialog></v-dialog>
-    <div class="home--sentence">
-      <blockquote class="blockquote">
-        <h1 class="mb-0 text-center">{{ displayQuote }}</h1>
-        <footer class="blockquote-footer mt-3">
-          <cite title="Source Title">{{ displayArtist }}</cite>
-        </footer>
-      </blockquote>
-      <div @click.prevent="filledSentence">{{ $t('refreshSentence') }}</div>
-    </div>
-    <footer class="home--footer">
-      <input @keyup.enter="submitPunchline" type="text" autocomplete="false" v-model="lyrics"
-        :placeholder="$t('placeholderLyrics')" />
-    </footer>
+    <loader v-if="!sentence"></loader>
+    <template v-else>
+      <div class="home--sentence">
+        <blockquote class="blockquote">
+          <h1 class="mb-0 text-center">
+            <router-link :to="{ name: 'Lyric', params: { id: sentence.id } }">
+              {{ displayQuote }}
+            </router-link>
+          </h1>
+          <footer class="blockquote-footer mt-3">
+            <cite title="Source Title">{{ displayArtist }}</cite>
+          </footer>
+        </blockquote>
+        <div @click.prevent="filledSentence">{{ $t('refreshSentence') }}</div>
+      </div>
+      <footer class="home--footer">
+        <input @keyup.enter="submitPunchline" type="text" autocomplete="false" v-model="lyrics"
+          :placeholder="$t('placeholderLyrics')" />
+      </footer>
+    </template>
   </section>
 </template>
 
@@ -33,7 +39,6 @@ export default {
   data() {
     return {
       sentence: null,
-      showLoader: false,
       lyrics: null,
     };
   },
@@ -59,9 +64,7 @@ export default {
     },
     async filledSentence() {
       try {
-        this.showLoader = true;
         this.sentence = await this.fetchPunchline();
-        this.showLoader = false;
       } catch (error) {
         this.$toasted.error(this.$i18n.t('errorApi'));
       }

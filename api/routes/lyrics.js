@@ -8,6 +8,8 @@ const middlewares = [
   checkRoutes(),
 ];
 
-Router.get('/', middlewares, routerWrapper(lyricsCtrl.returnLyricRandom));
+Router
+  .get('/', middlewares, routerWrapper(lyricsCtrl.returnLyricRandom))
+  .get('/:id', middlewares, routerWrapper(lyricsCtrl.getLyricWithId));
 
 module.exports = Router;

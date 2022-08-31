@@ -46,7 +46,7 @@
             </p>
             <p
             class="text-danger"
-            @click="deletePunchline(data._id, data.punchline, index)">
+            @click="deletePunchline(data._id, data.punchline, index, data.author)">
               <u>{{ $t('user.delete') }}</u>
             </p>
           </div>
@@ -73,15 +73,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getJwt']),
+    ...mapGetters(['isConnected', 'getUserId']),
   },
   async mounted() {
     try {
-      if (!this.getJwt) return this.$router.push({ name: 'Home' });
       const res = await this.callApiAuth(
         {
           route: `/user/${this.$route.params.uid}`,
           method: 'get',
+          skipAuth: true,
         },
       );
 
@@ -114,8 +114,18 @@ export default {
         0,
       );
     },
-    deletePunchline(id, punchline, index) {
+    deletePunchline(id, punchline, index, authorId) {
       try {
+        if (!this.isConnected) {
+          this.$modal.show('log');
+          return false;
+        }
+
+        if (authorId !== this.getUserId) {
+          this.$toasted.error(this.$t('deletePunchlineNotAuthorized'));
+          return false;
+        }
+
         this.$modal.show(
           'dialog',
           {
@@ -148,6 +158,8 @@ export default {
       } catch (error) {
         this.handleErrorApi(error);
       }
+
+      return true;
     },
     formatDate(date) {
       const dateObj = new Date(date);

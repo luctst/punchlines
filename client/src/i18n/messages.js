@@ -45,6 +45,7 @@ export default {
     punchline: {
       tooManyLikes: 'Vous avez atteint la limite de likes',
     },
+    deletePunchlineNotAuthorized: 'Vous n\'avez pas les droits pour supprimer.',
   },
   en: {
     lyricsNotFound: 'No lyrics could be found, please try agin or contact us.',
@@ -92,5 +93,6 @@ export default {
     punchline: {
       tooManyLikes: 'You hit the amount limit of likes',
     },
+    deletePunchlineNotAuthorized: 'You don\'t have the right to delete this.',
   },
 };
