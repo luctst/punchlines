@@ -42,7 +42,7 @@
             </div>
             <p class="mt-1 mb-1">
               {{ $t('user.likes') }}
-              <small class="text-muted">{{ data.likes.length }}</small>
+              <small class="text-muted">{{ likesNumber(data.likes) }}</small>
             </p>
             <p
             class="text-danger"
@@ -94,6 +94,26 @@ export default {
   },
   methods: {
     ...mapActions(['callApiAuth']),
+    likesNumber(likesArray) {
+      return likesArray.reduce(
+        (prev, next) => prev + next.liked,
+        0,
+      );
+    },
+    updateScore(punchlineArray) {
+      return punchlineArray.reduce(
+        (prev, next) => next.likes.reduce(
+          (innerPrev, innerNext) => {
+            let cpInnerPrev = innerPrev;
+
+            if (innerNext.author === this.userData._id) cpInnerPrev += innerNext.liked;
+            return cpInnerPrev;
+          },
+          prev,
+        ),
+        0,
+      );
+    },
     deletePunchline(id, punchline, index) {
       try {
         this.$modal.show(
@@ -114,6 +134,7 @@ export default {
                     await this.callApiAuth({ method: 'delete', route: `/punchlines/${id}` });
 
                     this.userData.punchlines.splice(index, 1);
+                    this.userData.score = this.updateScore(this.userData.punchlines);
                     this.$modal.hide('dialog');
                     this.$toasted.success(this.$t('user.modal.success'));
                   } catch (error) {

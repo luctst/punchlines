@@ -59,6 +59,22 @@ PunchlinesSchema.post('save', async function updateUserPunchline() {
   }
 });
 
+PunchlinesSchema.post('findOneAndDelete', async function decrementUsersScores(doc) {
+  try {
+    return await Promise.all(
+      doc.likes.map(async (likeData) => {
+        await mongoose.model('users').findByIdAndUpdate(
+          likeData.author,
+          { $inc: { score: -likeData.liked }},
+          { lean: true },
+        );
+      }),
+    );
+  } catch (error) {
+    throw error;
+  }
+})
+
 PunchlinesSchema.post('findOneAndDelete', async function deletePunchlines(doc) {
   try {
     const dataRemove = [

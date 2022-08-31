@@ -11,6 +11,25 @@ exports.create = async function createPunchline(req, res, session) {
 }
 
 exports.delete = async function deletePunchline(req, res, session) {
+  const errorNotAuthorized = { code: 403 };
+  const errorDoNotExist = { code: 400 };
+  const punchline = await queryDb(
+    'punchline',
+    'findById',
+    [req.params.id],
+    {
+      session,
+      projection: {
+        author: 1,
+      },
+    }
+  );
+  
+  if (!punchline) 
+    return { ...errorDoNotExist };
+  if (res.locals.session.token_user_id.toString() !== punchline.author.toString()) 
+    return { ...errorNotAuthorized};
+
   await queryDb('punchline', 'deleteOneById', [req.params.id], { session });
   return {
     code: 204,
@@ -42,26 +61,14 @@ exports.addLikes = async function addlikes(req, res, session) {
     );
   };
 
-  async function updateUserScore(userId, scoreSend) {
-    const userData = await queryDb(
-      'users',
-      'findById',
-      [userId],
-      {
-        session,
-        projection: {
-          score: 1,
-        },
-      }
-    );
-    const newScore = (scoreSend - userData.score) + userData.score;
+  async function updateUserScore(userId, scoreSend, authorLikes) {
     await queryDb(
       'users',
       'findByIdAndUpdate',
       [
         userId,
         {
-          $set: { score: newScore },
+          $inc: { score: scoreSend - authorLikes },
         },
       ],
       { session },
@@ -87,13 +94,13 @@ exports.addLikes = async function addlikes(req, res, session) {
       ],
       { session },
     );
-    
-    await updateUserScore(req.body.author_id, req.body.likes);
+     
+    await updateUserScore(req.body.author_id, req.body.likes, 0);
     return calculLikesAndReturnToClient(newPunchline.likes, req.body.author_id);
   }
-
+  
   if (punchline.likes[userLikeIndex].liked >= 100) return { ...error };
-
+  
   const newPunch = await queryDb(
     'punchline',
     'findByIdAndUpdate',
@@ -103,23 +110,20 @@ exports.addLikes = async function addlikes(req, res, session) {
         $set: { [`likes.${userLikeIndex}.liked`]: req.body.likes},
       }
     ],
-    { session },
-  );
-  
-  await queryDb(
-    'users',
-    'findByIdAndUpdate',
-    [
-      req.body.author_id,
+    { session, new: false },
+    );
+    const punchLikes = await queryDb(
+      'punchline',
+      'findById',
+      [req.params.id],
       {
-        $inc: { score: req.body.likes },
+        session,
+        projection: { likes: 1 }
       },
-    ],
-    { session },
-  );
-
-  await updateUserScore(req.body.author_id, req.body.likes);
-  return calculLikesAndReturnToClient(newPunch.likes, req.body.author_id);
+    );
+      
+  await updateUserScore(req.body.author_id, req.body.likes, newPunch.likes[userLikeIndex].liked);
+  return calculLikesAndReturnToClient(punchLikes.likes, req.body.author_id);
 }
 
 exports.getPunchline = async function getpunchline(req, res, session) {

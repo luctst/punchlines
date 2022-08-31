@@ -7,7 +7,7 @@ module.exports = function queryFindByIdAndUpdate(Model, mid, dataToUpdate, ops) 
     throw new TypeError(
       'findByIdAndUpdate session fn second parameter must be an object'
     );
-
+  
   return Model.findByIdAndUpdate(
     mid,
     { ...dataToUpdate },
@@ -16,7 +16,7 @@ module.exports = function queryFindByIdAndUpdate(Model, mid, dataToUpdate, ops) 
       ...(ops && ops.session && { session: ops.session }),
       lean: true,
       returnDocument: 'after',
-      new: true,
+      new: ops && ops.hasOwnProperty('new') ? ops.new : true,
     }
   );
 };
