@@ -34,6 +34,11 @@ export default {
         success: 'Lyric supprimée !',
       },
     },
+    btnLogout: 'Déconnexion',
+    modalLogout: {
+      text: 'Voulez-vous vous déconnecter ?',
+      buttons: 'Continuer',
+    },
     punchlineForm: {
       success: 'Lyrics créee avec succés !',
       contentSuccess: 'Cliquez sur le bouton "inspecter" pour voir qui aime',
@@ -81,6 +86,11 @@ export default {
         buttons: ['Cancel', 'Delete'],
         success: 'Lyric correctly deleted',
       },
+    },
+    btnLogout: 'Logout',
+    modalLogout: {
+      text: 'Do you really want logout ?',
+      buttons: 'Continue',
     },
     punchlineForm: {
       success: 'Lyrics correctly created !',

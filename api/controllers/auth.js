@@ -154,3 +154,11 @@ exports.RefreshToken = async function (req, res, session) {
     },
   };
 }
+
+exports.Logout = async function deleteSession(req, res, session) {
+  await queryDb('sessions', 'deleteOneById', [res.locals.session._id.toString()], { session });
+
+  return {
+    code: 204,
+  }
+};

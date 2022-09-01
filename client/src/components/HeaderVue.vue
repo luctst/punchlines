@@ -1,5 +1,6 @@
 <template>
   <header class="header">
+    <v-dialog></v-dialog>
     <nav class="header--nav">
       <ul class="header--nav--ul">
         <li v-for="(item, index) in headers" :key="index" class="header--nav--ul--li">
@@ -10,15 +11,12 @@
             <div @click.prevent="headers[index].active = !headers[index].active">
               {{ filledLang }}
             </div>
-            <div
-            v-if="item.active"
-            class="is__dropdown">
+            <div v-if="item.active" class="is__dropdown">
               <ul class="is__dropdown__ul">
                 <li
                 @click.prevent="switchLang(dropdownItem.code)"
                 v-for="(dropdownItem, y) in item.langDropdown"
-                :key="y"
-                class="is__dropdown__ul__li">
+                  :key="y" class="is__dropdown__ul__li">
                   {{ dropdownItem.label }}
                 </li>
               </ul>
@@ -31,32 +29,72 @@
           </router-link>
           <div v-else @click="$modal.show('log')">{{ $t('connexionHeader') }}</div>
         </li>
+        <li v-if="isConnected" class="header--nav--ul--li">
+          <div @click="logout">{{ $t('btnLogout') }}</div>
+        </li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import ClickOutside from 'vue-click-outside';
+import errorMixin from '@/mixins/error';
 
 export default {
   name: 'HeaderVue',
+  mixins: [errorMixin],
   directives: {
     ClickOutside,
   },
   computed: {
-    ...mapGetters(['getUserId', 'getUserName']),
+    ...mapGetters(['getUserId', 'getUserName', 'isConnected']),
     filledLang() {
       return this.$store.state.lang.find((i) => i.code === this.$i18n.locale).label;
     },
   },
   methods: {
+    ...mapActions(['callApiAuth']),
+    ...mapMutations(['resetUserData']),
     hideDropdown(index) {
       this.headers[index].active = false;
     },
     switchLang(newLang) {
       this.$root.$i18n.locale = newLang;
+    },
+    async logout() {
+      try {
+        this.$modal.show(
+          'dialog',
+          {
+            text: this.$t('modalLogout.text'),
+            buttons: [
+              {
+                title: this.$t('user.modal.buttons[0]'),
+                handler: () => {
+                  this.$modal.hide('dialog');
+                },
+              },
+              {
+                title: this.$t('modalLogout.buttons'),
+                handler: async () => {
+                  await this.callApiAuth({
+                    method: 'delete',
+                    route: '/auth/logout',
+                  });
+
+                  this.resetUserData();
+                  this.$modal.hide('dialog');
+                  this.$router.push({ name: 'Home' });
+                },
+              },
+            ],
+          },
+        );
+      } catch (error) {
+        this.handleErrorApi(error);
+      }
     },
   },
   data() {

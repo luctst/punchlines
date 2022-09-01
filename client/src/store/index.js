@@ -25,6 +25,9 @@ export default new Vuex.Store({
     updateJwt(state, newJwt) {
       state.usersData.jwt = newJwt;
     },
+    resetUserData(state) {
+      state.usersData = null;
+    },
   },
   actions: {
     async callApiAuth({ commit, state }, payload) {

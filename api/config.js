@@ -127,6 +127,10 @@ module.exports = {
         path: '/punchlines/:id',
         data: null,
       },
+      {
+        path: '/auth/logout',
+        data: null,
+      },
     ],
     patch: [
       {

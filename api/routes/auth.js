@@ -33,6 +33,7 @@ const middlewares = [
 Router
   .get('/refresh_token', middlewares, routerWrapper(authCtrl.RefreshToken))
   .post('/login', middlewares, routerWrapper(authCtrl.Login))
-  .post('/register', middlewares, routerWrapper(authCtrl.Register));
+  .post('/register', middlewares, routerWrapper(authCtrl.Register))
+  .delete('/logout', middlewares, routerWrapper(authCtrl.Logout));
 
 module.exports = Router;
